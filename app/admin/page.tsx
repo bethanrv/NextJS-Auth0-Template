@@ -63,8 +63,10 @@ async function AdminPage() {
 
   // Create Supabase client and query events
   const supabase = await createClient();
-  const { data: events, error } = await supabase.from("events").select();
+  let { data: events, error } = await supabase.from("events").select();
   console.log("Events:", events, "Error:", error);
+
+  events = events as Event[]
 
   // filter events
   const currentEvents = filterCurrentEvents(events)
