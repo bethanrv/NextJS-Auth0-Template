@@ -132,7 +132,6 @@ const createClient = async ()=>{
 
 var { r: __turbopack_require__, f: __turbopack_module_context__, i: __turbopack_import__, s: __turbopack_esm__, v: __turbopack_export_value__, n: __turbopack_export_namespace__, c: __turbopack_cache__, M: __turbopack_modules__, l: __turbopack_load__, j: __turbopack_dynamic__, P: __turbopack_resolve_absolute_path__, U: __turbopack_relative_url__, R: __turbopack_resolve_module_id_path__, b: __turbopack_worker_blob_url__, g: global, __dirname, x: __turbopack_external_require__, y: __turbopack_external_import__, z: require } = __turbopack_context__;
 {
-// app/api/cron-write/route.ts
 __turbopack_esm__({
     "GET": (()=>GET),
     "dynamic": (()=>dynamic)
@@ -156,9 +155,106 @@ async function GET(request) {
             }
         });
     }
+    // Request upcoming and completed fights
+    async function getFights() {
+        try {
+            const baseUrl = 'https://api.the-odds-api.com/v4/sports/boxing_boxing/scores';
+            const params = new URLSearchParams({
+                apiKey: process.env.ODDS_API_KEY ? process.env.ODDS_API_KEY : '',
+                regions: 'us',
+                daysFrom: '3'
+            });
+            const response = await fetch(`${baseUrl}?${params}`);
+            if (!response.ok) throw new Error(`HTTP error status: ${response.status}`);
+            const data = response.json();
+            return data;
+        } catch (e) {
+            console.log('getFights failed: ' + e);
+            throw e;
+        }
+    }
+    // Check if the database contains the given event
+    async function dbContainsEvent(fight) {
+        const { data, error } = await supabase.from('events').select('*').eq('id', fight.id);
+        if (error) {
+            console.error('dbContainsEvent query error:', error);
+            throw error;
+        }
+        return data && data.length > 0;
+    }
+    // check if a event is already complete
+    async function getEventCompleted(fight) {
+        // get event complete data
+        const { data, error } = await supabase.from('events').select('completed').eq('id', fight.id);
+        if (error) {
+            console.error('getEventCompleted query error:', error);
+            throw error;
+        }
+        console.log('event completed data:');
+        console.log(data);
+        return false;
+    }
+    async function insertEvent(fight) {
+        const { data, error } = await supabase.from('events').insert({
+            id: fight.id,
+            sport_key: fight.sport_key,
+            sport_title: fight.sport_title,
+            commence_time: fight.commence_time,
+            completed: fight.completed,
+            home_team: fight.home_team,
+            away_team: fight.away_team,
+            scores: fight.scores,
+            last_updated: fight.last_updated
+        }).select('*').single();
+        if (error) {
+            console.error('Insert error:', error);
+            throw error;
+        }
+        return data;
+    }
+    async function updateEvent(fight) {
+        try {
+            const { data, error } = await supabase.from('events').update({
+                sport_key: fight.sport_key,
+                scores: fight.scores,
+                completed: fight.completed,
+                last_updated: new Date().toISOString()
+            }).eq('id', fight.id).select('*').single();
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error('Update error:', error);
+            return null;
+        }
+    }
+    // create or update fight events in db
+    async function updateFights(fights) {
+        let apiEventCount = fights.length;
+        let insertedCount = 0;
+        let updateCount = 0;
+        for (const fight of fights){
+            if (!dbContainsEvent(fight)) {
+                const insertRes = await insertEvent(fight);
+                insertedCount++;
+            } else {
+                // api res fight completed, db event not complete, then update db with final score
+                if (fight.completed == "true" && !await getEventCompleted(fight)) {
+                    updateEvent(fight);
+                    updateCount++;
+                }
+            }
+        }
+        // monitoring
+        console.log('Update Summary:');
+        console.log(`API found ${apiEventCount} items`);
+        console.log(`Inserted ${insertedCount} new items`);
+        console.log(`Updated ${updateCount} completed items`);
+    }
     // Proceed with database operations after successful auth
     const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$supabase$2f$server$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createClient"])();
     try {
+        const fights = await getFights();
+        await updateFights(fights);
         const { data, error } = await supabase.from('testTbl').select('*');
         if (error) throw error;
         console.log('Cron job results:', data);
