@@ -12,7 +12,10 @@ runtime.loadChunk("server/chunks/ssr/node_modules_@auth0_nextjs-auth0_dist_e14a1
 runtime.loadChunk("server/chunks/ssr/node_modules_joi_5c9510._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_next_ca4f0e._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_openid-client_1f67dc._.js");
-runtime.loadChunk("server/chunks/ssr/node_modules_482884._.js");
-runtime.loadChunk("server/chunks/ssr/[root of the server]__ffe4c8._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_tr46_1a859a._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_@supabase_auth-js_dist_module_fa20a4._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_2b7001._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__5796d3._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_e99f39._.js");
 runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/logged-in/page/actions.js [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
 module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/logged-in/page { METADATA_0 => \"[project]/app/favicon.ico.mjs { IMAGE => \\\"[project]/app/favicon.ico [app-rsc] (static)\\\" } [app-rsc] (structured image object, ecmascript, Next.js server component)\", MODULE_1 => \"[project]/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/app/loading.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_3 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_4 => \"[project]/app/logged-in/page.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;

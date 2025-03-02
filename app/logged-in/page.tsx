@@ -1,5 +1,7 @@
 import { getSession } from "@auth0/nextjs-auth0";
 import { redirect } from "next/navigation";
+import { createClient } from '@/utils/supabase/server';
+
 
 export default async function LoggedIn() {
   const session = await getSession();
@@ -10,6 +12,8 @@ export default async function LoggedIn() {
 
   const user = session?.user;
 
+  const supabase = await createClient();
+  const { data: rows } = await supabase.from("testTbl").select();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-50 flex items-center justify-center p-6">
       <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full">
@@ -23,6 +27,7 @@ export default async function LoggedIn() {
           You're now logged into your secure dashboard.
         </p>
       </div>
+      <pre>{JSON.stringify(rows)}</pre>
     </div>
   );
 }
