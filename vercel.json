@@ -2,7 +2,7 @@
   "crons": [
     {
       "path": "/api/cron-write",
-      "schedule": "0 * * * *",
+      "schedule": "0 0 * * *",
       "headers": {
         "Authorization": "Bearer 46355d7cabc176aaff95d878a315921bc22fc0234652afdb126bf147eaa1bc1c"
       }
