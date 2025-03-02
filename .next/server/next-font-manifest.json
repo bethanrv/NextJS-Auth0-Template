@@ -1,18 +1,6 @@
 {
   "app": {
-    "[project]/app/page": [
-      "static/media/GeistVF-s.p.7fe29570.woff",
-      "static/media/GeistMonoVF-s.p.a9159d35.woff"
-    ],
     "[project]/app/logged-in/page": [
-      "static/media/GeistVF-s.p.7fe29570.woff",
-      "static/media/GeistMonoVF-s.p.a9159d35.woff"
-    ],
-    "[project]/app/admin/page": [
-      "static/media/GeistVF-s.p.7fe29570.woff",
-      "static/media/GeistMonoVF-s.p.a9159d35.woff"
-    ],
-    "[project]/app/unauthorized/page": [
       "static/media/GeistVF-s.p.7fe29570.woff",
       "static/media/GeistMonoVF-s.p.a9159d35.woff"
     ]
