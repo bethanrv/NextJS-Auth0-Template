@@ -17,7 +17,7 @@ interface Event {
 }
 
 // Return past events
-function filterPastEvents(events: Event[]) {
+function filterPastEvents(events: Event[]):Event[] {
   if (!events || !Array.isArray(events))
     throw new Error("events not array: " + events);
   let pastEvents: Event[] = [];
@@ -28,7 +28,7 @@ function filterPastEvents(events: Event[]) {
 }
 
 // Return current events (non-complete and already commenced)
-function filterCurrentEvents(events: Event[]) {
+function filterCurrentEvents(events: Event[]):Event[] {
   if (!events || !Array.isArray(events))
     throw new Error("events not array: " + events);
   const currentTime = new Date();
@@ -41,7 +41,7 @@ function filterCurrentEvents(events: Event[]) {
 }
 
 // Return upcoming events
-function filterUpcomingEvents(events: Event[]) {
+function filterUpcomingEvents(events: Event[]):Event[] {
   if (!events || !Array.isArray(events))
     throw new Error("events not array: " + events);
   const currentTime = new Date();
@@ -66,7 +66,7 @@ async function AdminPage() {
   const { data: events, error } = await supabase.from("events").select();
   console.log("Events:", events, "Error:", error);
 
-  // Assume events is an array and you have filtered them as needed.
+  // filter events
   const currentEvents = filterCurrentEvents(events)
   const upcomingEvents = filterUpcomingEvents(events)
   const pastEvents = filterPastEvents(events)
