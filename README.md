@@ -9,6 +9,7 @@ This demo project showcases role-based authentication and authorization using Ne
 - 🚀 Next.js 15 App Router
 - 🔒 Protected API Routes
 - 🎨 Styled with Tailwind CSS
+- Supabase DB
 
 ## Demo Pages
 
