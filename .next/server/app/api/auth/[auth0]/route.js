@@ -5,7 +5,7 @@ runtime.loadChunk("server/chunks/node_modules_jose_dist_node_cjs_b4a801._.js");
 runtime.loadChunk("server/chunks/node_modules_@auth0_nextjs-auth0_dist_dc5aa1._.js");
 runtime.loadChunk("server/chunks/node_modules_joi_28ce06._.js");
 runtime.loadChunk("server/chunks/node_modules_openid-client_ef38b3._.js");
-runtime.loadChunk("server/chunks/node_modules_f6a737._.js");
+runtime.loadChunk("server/chunks/node_modules_e3b291._.js");
 runtime.loadChunk("server/chunks/[root of the server]__53b2da._.js");
 runtime.loadChunk("server/chunks/_8e1e63._.js");
 runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/api/auth/[auth0]/route/actions.js [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);

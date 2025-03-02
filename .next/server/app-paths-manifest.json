@@ -1,3 +1,6 @@
 {
-  "/api/cron-write/route": "app/api/cron-write/route.js"
+  "/api/protected/updateEvent/route": "app/api/protected/updateEvent/route.js",
+  "/admin/page": "app/admin/page.js",
+  "/api/auth/[auth0]/route": "app/api/auth/[auth0]/route.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js"
 }

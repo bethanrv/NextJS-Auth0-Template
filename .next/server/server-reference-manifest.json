@@ -1,5 +1,39 @@
 {
-  "node": {},
+  "node": {
+    "005e6b59fb01c99ad9662d87becf8a980e3088e6c2": {
+      "workers": {
+        "app/admin/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/page": "rsc"
+      }
+    },
+    "0075db9928ca48174a37ceccba481a63c49aa282a7": {
+      "workers": {
+        "app/admin/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/page": "rsc"
+      }
+    },
+    "003ae6c5a82c3607305b60cda85422513808bbf7bb": {
+      "workers": {
+        "app/admin/page": {
+          "moduleId": "[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/admin/page": "rsc"
+      }
+    }
+  },
   "edge": {},
   "encryptionKey": "fe33TZzasP7z7rFM0AHu+YvtIBx0AdXWUQGXita51xM="
 }

@@ -11,8 +11,8 @@ interface ScoreResponse {
     completed : string,
     home_team : string,
     away_team : string,
-    scores : string,
-    last_updated : string
+    scores : string | null,
+    last_updated : string | null
 }
 
 export async function GET(request: Request) {

@@ -14,7 +14,10 @@ runtime.loadChunk("server/chunks/ssr/node_modules_jose_dist_node_cjs_f8a533._.js
 runtime.loadChunk("server/chunks/ssr/node_modules_@auth0_nextjs-auth0_dist_e14a14._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_joi_5c9510._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_openid-client_1f67dc._.js");
-runtime.loadChunk("server/chunks/ssr/node_modules_23360b._.js");
-runtime.loadChunk("server/chunks/ssr/[root of the server]__63e770._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_tr46_1a859a._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_@supabase_auth-js_dist_module_fa20a4._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_ffdf7a._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__1b58b5._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_54e08b._.js");
 runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/admin/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
 module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/admin/page { METADATA_0 => \"[project]/app/favicon.ico.mjs { IMAGE => \\\"[project]/app/favicon.ico [app-rsc] (static)\\\" } [app-rsc] (structured image object, ecmascript, Next.js server component)\", MODULE_1 => \"[project]/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/app/loading.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_3 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_4 => \"[project]/app/admin/page.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;

@@ -1,0 +1,3 @@
+{
+  "/api/protected/updateEvent/route": "app/api/protected/updateEvent/route.js"
+}
