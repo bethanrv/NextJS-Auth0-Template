@@ -1,7 +1,6 @@
 {
-  "/page": "app/page.js",
-  "/api/auth/[auth0]/route": "app/api/auth/[auth0]/route.js",
-  "/admin/page": "app/admin/page.js",
+  "/api/cron-write/route": "app/api/cron-write/route.js",
+  "/feed/page": "app/feed/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/feed/page": "app/feed/page.js"
+  "/api/auth/[auth0]/route": "app/api/auth/[auth0]/route.js"
 }

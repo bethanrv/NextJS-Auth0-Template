@@ -140,13 +140,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$supabase$2f$server$
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__ = __turbopack_import__("[project]/node_modules/next/server.js [app-route] (ecmascript)");
 ;
 ;
+const preferedMarket = 'DraftKings';
 async function GET(request) {
     // Authorization check first
     const authHeader = request.headers.get('Authorization');
-    console.log('authHeader');
-    console.log(authHeader);
-    console.log('process.env.CRON_SECRET');
-    console.log(process.env.CRON_SECRET);
     if (!authHeader || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
         return new __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"]('Unauthorized', {
             status: 401,
@@ -169,13 +166,50 @@ async function GET(request) {
             const data = response.json();
             return data;
         } catch (e) {
+            console.log('get scores failed: ' + e);
+            throw e;
+        }
+    }
+    // get odds from odds api
+    async function getOdds() {
+        try {
+            const baseUrl = 'https://api.the-odds-api.com/v4/sports/boxing_boxing/odds';
+            const params = new URLSearchParams({
+                apiKey: process.env.ODDS_API_KEY ? process.env.ODDS_API_KEY : '',
+                regions: 'us',
+                oddsFormat: 'american',
+                daysFrom: '3'
+            });
+            const response = await fetch(`${baseUrl}?${params}`);
+            if (!response.ok) throw new Error(`HTTP error status: ${response.status}`);
+            const data = response.json();
+            return data;
+        } catch (e) {
+            console.log('get odds failed: ' + e);
+            throw e;
+        }
+    }
+    // get scores from odds api
+    async function getScores() {
+        try {
+            const baseUrl = 'https://api.the-odds-api.com/v4/sports/boxing_boxing/scores';
+            const params = new URLSearchParams({
+                apiKey: process.env.ODDS_API_KEY ? process.env.ODDS_API_KEY : '',
+                regions: 'us',
+                daysFrom: '3'
+            });
+            const response = await fetch(`${baseUrl}?${params}`);
+            if (!response.ok) throw new Error(`HTTP error status: ${response.status}`);
+            const data = response.json();
+            return data;
+        } catch (e) {
             console.log('getFights failed: ' + e);
             throw e;
         }
     }
     // Check if the database contains the given event
-    async function dbContainsEvent(fight) {
-        const { data, error } = await supabase.from('events').select('*').eq('id', fight.id);
+    async function dbContainsEvent(event) {
+        const { data, error } = await supabase.from('events').select('*').eq('id', event.id);
         if (error) {
             console.error('dbContainsEvent query error:', error);
             throw error;
@@ -183,34 +217,134 @@ async function GET(request) {
         return data && data.length > 0;
     }
     // check if a event is already complete
-    async function getEventCompleted(fight) {
+    async function getEventCompleted(event) {
         // get event complete data
-        const { data, error } = await supabase.from('events').select('completed').eq('id', fight.id);
+        const { data, error } = await supabase.from('events').select('completed').eq('id', event.id);
         if (error) {
             console.error('getEventCompleted query error:', error);
             throw error;
         }
-        console.log('event completed data:');
-        console.log(data);
         return false;
     }
-    async function insertEvent(fight) {
+    // check if a bookmarker contains our prefered market
+    function hasPreferedMarket(event) {
+        console.log('testing has prefered market');
+        for (const bookmarker of event.bookmakers){
+            if (bookmarker.title == preferedMarket) console.log('found prefered market');
+            return true;
+        }
+        console.log('Warning: prefered market not found');
+        return false;
+    }
+    // get bookmarker from prefered market
+    function getPreferedBookmarker(event) {
+        console.log('getting prefered bookmarker');
+        for (const bookmarker of event.bookmakers){
+            if (bookmarker.title == preferedMarket) console.log('found prefered bookmarker, ');
+            console.log(bookmarker);
+            return bookmarker;
+        }
+        console.log('Error: bookmarker not found');
+        throw new Error("Error getting prefered market: market not found");
+    }
+    // get price of given outcome for given player
+    function getOutcomePrice(name, outcomes) {
+        console.log('getting outcome price for: ' + name);
+        for (const outcome of outcomes){
+            if (outcome.name == name) {
+                console.log('found outcome of price: ' + outcome.price);
+                console.log(outcome);
+                return outcome.price;
+            }
+        }
+        console.log('Warning: outcome not found');
+        return 0;
+    }
+    // get bookmarker price for home team
+    function getHomeTeamPrice(event) {
+        try {
+            console.log('getting home team price for event, ');
+            console.log(event);
+            if (!event.bookmakers[0].markets[0]) {
+                console.log('no markets - return 0');
+                return 0;
+            }
+            if (hasPreferedMarket(event)) {
+                console.log('...Using prefered');
+                const preferedBookmarker = getPreferedBookmarker(event);
+                return getOutcomePrice(event.home_team, preferedBookmarker.markets[0].outcomes);
+            } else {
+                console.log('...Using first market');
+                return getOutcomePrice(event.home_team, event.bookmakers[0].markets[0].outcomes);
+            }
+        } catch (e) {
+            console.log('Error getting home team price: ' + e);
+            return 0;
+        }
+    }
+    // get bookmarker price for away team
+    function getAwayTeamPrice(event) {
+        try {
+            if (!event.bookmakers[0].markets[0]) {
+                console.log('no markets - return 0');
+                return 0;
+            }
+            if (hasPreferedMarket(event)) {
+                const preferedBookmarker = getPreferedBookmarker(event);
+                return getOutcomePrice(event.away_team, preferedBookmarker.markets[0].outcomes);
+            } else {
+                return getOutcomePrice(event.away_team, event.bookmakers[0].markets[0].outcomes);
+            }
+        } catch (e) {
+            console.log('Error getting away team price: ' + e);
+            return 0;
+        }
+    }
+    async function insertEvent(event) {
+        const homeTeamPrice = getHomeTeamPrice(event);
+        const awayTeamPrice = getAwayTeamPrice(event);
+        console.log('home team price');
+        console.log(homeTeamPrice);
+        console.log('away team price');
+        console.log(awayTeamPrice);
         const { data, error } = await supabase.from('events').insert({
-            id: fight.id,
-            sport_key: fight.sport_key,
-            sport_title: fight.sport_title,
-            commence_time: fight.commence_time,
-            completed: fight.completed,
-            home_team: fight.home_team,
-            away_team: fight.away_team,
-            scores: fight.scores,
-            last_updated: fight.last_updated
+            id: event.id,
+            sport_key: event.sport_key,
+            sport_title: event.sport_title,
+            commence_time: event.commence_time,
+            completed: event.completed,
+            home_team: event.home_team,
+            away_team: event.away_team,
+            scores: null,
+            last_updated: null,
+            home_team_price: homeTeamPrice,
+            awayTeamPrice: awayTeamPrice
         }).select('*').single();
         if (error) {
             console.error('Insert error:', error);
             throw error;
         }
         return data;
+    }
+    async function updateOdds(event) {
+        try {
+            if (event.bookmakers.length == 0) return;
+            const homeTeamPrice = getHomeTeamPrice(event);
+            const awayTeamPrice = getAwayTeamPrice(event);
+            console.log('home team price');
+            console.log(homeTeamPrice);
+            console.log('away team price');
+            console.log(awayTeamPrice);
+            const { data, error } = await supabase.from('events').update({
+                home_team_price: homeTeamPrice,
+                away_team_price: awayTeamPrice
+            }).eq('id', event.id);
+            if (error) throw error;
+            return data;
+        } catch (error) {
+            console.error('Update error:', error);
+            return null;
+        }
     }
     async function updateEvent(fight) {
         try {
@@ -227,21 +361,48 @@ async function GET(request) {
             return null;
         }
     }
+    function combineOddsAndScoreData(oddsData, scoresData) {
+        let events = [];
+        for (const odds of oddsData){
+            let event = odds;
+            for (const score of scoresData){
+                if (odds.id == score.id) {
+                    event.scores = score.scores;
+                    event.last_updated = score.last_updated;
+                    break;
+                }
+            }
+            events.push(event);
+        }
+        return events;
+    }
     // create or update fight events in db
-    async function updateFights(fights) {
-        let apiEventCount = fights.length;
+    // get from /odds
+    // insert if new
+    async function updateFights() {
+        console.log('updating fights');
+        const oddsData = await getOdds()// get /odds
+        ;
+        console.log('oddsData');
+        console.log(oddsData.length);
+        // some metrics to log...  
+        let apiEventCount = oddsData.length;
         let insertedCount = 0;
         let updateCount = 0;
-        for (const fight of fights){
-            if (!dbContainsEvent(fight)) {
-                const insertRes = await insertEvent(fight);
+        // for each event, insert new & update completed
+        for (const event of oddsData){
+            if (!dbContainsEvent(event)) {
+                console.log('inserting event');
+                const insertRes = await insertEvent(event);
                 insertedCount++;
             } else {
-                // api res fight completed, db event not complete, then update db with final score
-                if (fight.completed == "true" && !await getEventCompleted(fight)) {
-                    updateEvent(fight);
-                    updateCount++;
-                }
+                // if( event.completed == "true" && (!await getEventCompleted(event)) ) { 
+                //     console.log('updating event')
+                //     updateEvent(event)
+                //     updateCount++
+                // }
+                updateOdds(event) // aslo update odds 
+                ;
             }
         }
         // monitoring
@@ -253,11 +414,9 @@ async function GET(request) {
     // Proceed with database operations after successful auth
     const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$supabase$2f$server$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createClient"])();
     try {
-        const fights = await getFights();
-        await updateFights(fights);
+        await updateFights();
         const { data, error } = await supabase.from('testTbl').select('*');
         if (error) throw error;
-        console.log('Cron job results:', data);
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true,
             count: data.length,

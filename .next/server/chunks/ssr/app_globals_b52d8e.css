@@ -354,6 +354,10 @@ img, video {
   display: inline-flex;
 }
 
+.hidden {
+  display: none;
+}
+
 .h-10 {
   height: 2.5rem;
 }
@@ -759,6 +763,18 @@ img, video {
 :root {
   --background: #fff;
   --foreground: #171717;
+  --font-primary: "Inter", sans-serif;
+  --font-secondary: "Space Mono", monospace;
+  --green-main: #aaff64;
+  --red-main: #ff6a3d;
+}
+
+.green-main {
+  color: var(--green-main);
+}
+
+.red-main {
+  color: var(--red-main);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -770,13 +786,43 @@ img, video {
 
 body {
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-primary), sans-serif;
+}
+
+.hidden {
+  display: none;
 }
 
 .action-button {
   background-color: #20e528;
   padding: .5rem 1rem;
   border-radius: 100px;
+}
+
+.fightCardTitle {
+  font-weight: bold;
+  font-size: 2rem;
+  font-family: var(--font-card-header), sans-serif;
+  display: flex;
+}
+
+.fightCardTitle p {
+  margin: .25rem;
+}
+
+.feed-item {
+  background-color: #000000d4;
+  color: #fff;
+}
+
+.bet-btn {
+  background-color: var(--green-main);
+  border-radius: 2rem;
+  padding: .5rem 1rem;
+  font-size: 1.2rem;
+  color: #000;
+  margin-top: 1rem;
+  font-weight: 500;
 }
 
 .hover\:bg-blue-600:hover {

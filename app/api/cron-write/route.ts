@@ -3,25 +3,77 @@ import { rejects } from 'assert';
 import { NextResponse } from 'next/server';
 import { resolve } from 'path';
 
-interface ScoreResponse {
-    id : string,
-    sport_key : string,
-    sport_title : string,
-    commence_time : string,
-    completed : string,
-    home_team : string,
-    away_team : string,
-    scores : string | null,
-    last_updated : string | null
+interface Outcome {
+  name: string;
+  price: number;
 }
+
+interface Market {
+  key: string;
+  last_update: string;
+  outcomes: Outcome[];
+}
+
+interface Bookmaker {
+  key: string;
+  title: string;
+  last_update: string;
+  markets: Market[];
+}
+
+interface fight {
+  id: string;
+  sport_key : string;
+  sport_title : string;
+  commence_time : string;
+  completed : string;
+  home_team : string;
+  away_team : string;
+  bookmakers: Bookmaker[];
+  scores : string | null;
+}
+
+interface OddsResponse {
+  id: string;
+  sport_key : string;
+  sport_title : string;
+  commence_time : string;
+  completed : string;
+  home_team : string;
+  away_team : string;
+  bookmakers: Bookmaker[];
+}
+
+interface ScoreResponse {
+  id : string;
+  sport_key : string;
+  sport_title : string;
+  commence_time : string;
+  completed : string;
+  home_team : string;
+  away_team : string;
+  scores : string | null;
+  last_updated : string | null;
+}
+
+interface Event {
+  id: string;
+  sport_key : string;
+  sport_title : string;
+  commence_time : string;
+  completed : string;
+  home_team : string;
+  away_team : string;
+  bookmakers: Bookmaker[];
+  scores : string | null;
+  last_updated : string | null;
+}
+
+const preferedMarket = 'DraftKings'
 
 export async function GET(request: Request) {
   // Authorization check first
   const authHeader = request.headers.get('Authorization');
-  console.log('authHeader')
-  console.log(authHeader)
-  console.log('process.env.CRON_SECRET')
-  console.log(process.env.CRON_SECRET)
   if (!authHeader || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
     return new NextResponse('Unauthorized', {
       status: 401,
@@ -44,14 +96,55 @@ export async function GET(request: Request) {
         return data
     }
     catch(e) {
+        console.log('get scores failed: ' + e)
+        throw e
+    }
+  }
+
+  // get odds from odds api
+  async function getOdds() {
+    try{
+        const baseUrl = 'https://api.the-odds-api.com/v4/sports/boxing_boxing/odds'
+        const params = new URLSearchParams({
+            apiKey: process.env.ODDS_API_KEY ? process.env.ODDS_API_KEY : '',
+            regions: 'us',
+            oddsFormat: 'american' ,
+            daysFrom: '3'
+        })
+        const response = await fetch(`${baseUrl}?${params}`)
+        if(!response.ok) throw new Error(`HTTP error status: ${response.status}`)
+        const data = response.json()
+        return data
+    }
+    catch(e) {
+        console.log('get odds failed: ' + e)
+        throw e
+    }
+  }
+
+  // get scores from odds api
+  async function getScores() {
+    try{
+        const baseUrl = 'https://api.the-odds-api.com/v4/sports/boxing_boxing/scores'
+        const params = new URLSearchParams({
+            apiKey: process.env.ODDS_API_KEY ? process.env.ODDS_API_KEY : '',
+            regions: 'us',
+            daysFrom: '3'
+        })
+        const response = await fetch(`${baseUrl}?${params}`)
+        if(!response.ok) throw new Error(`HTTP error status: ${response.status}`)
+        const data = response.json()
+        return data
+    }
+    catch(e) {
         console.log('getFights failed: ' + e)
         throw e
     }
   }
 
   // Check if the database contains the given event
-  async function dbContainsEvent(fight: ScoreResponse){
-    const { data, error } = await supabase.from('events').select('*').eq('id', fight.id);
+  async function dbContainsEvent(event: Event){
+    const { data, error } = await supabase.from('events').select('*').eq('id', event.id);
     if (error) {
       console.error('dbContainsEvent query error:', error);
       throw error;
@@ -60,31 +153,101 @@ export async function GET(request: Request) {
   }
 
   // check if a event is already complete
-  async function getEventCompleted(fight: ScoreResponse) {
+  async function getEventCompleted(event: Event) {
     // get event complete data
-    const { data, error } = await supabase.from('events').select('completed').eq('id', fight.id);
+    const { data, error } = await supabase.from('events').select('completed').eq('id', event.id);
     if (error) {
         console.error('getEventCompleted query error:', error);
         throw error;
     }
-    console.log('event completed data:')
-    console.log(data)
     return false
   }
 
-  async function insertEvent(fight: ScoreResponse) {
+  // check if a bookmarker contains our prefered market
+  function hasPreferedMarket(event : Event) {
+    for(const bookmarker of event.bookmakers) {
+      if ( bookmarker.title == preferedMarket )
+        return true
+    }
+    return false
+  }
+
+  // get bookmarker from prefered market
+  function getPreferedBookmarker(event : Event) {
+    for(const bookmarker of event.bookmakers) {
+      if ( bookmarker.title == preferedMarket )
+        return bookmarker
+    }
+    throw new Error("Error getting prefered market: market not found")
+  }
+
+  // get price of given outcome for given player
+  function getOutcomePrice(name: string, outcomes: Outcome[]) {
+    for(const outcome of outcomes) {
+      if ( outcome.name == name ) {
+        return outcome.price
+      }
+    }
+    console.log('Warning: outcome not found')
+    return 0;
+  }
+
+  // get bookmarker price for home team
+  function getHomeTeamPrice(event : Event) {
+    try{
+      if(!event.bookmakers[0].markets[0]){
+        return 0
+      }
+
+      if( hasPreferedMarket(event) ) {
+        const preferedBookmarker = getPreferedBookmarker(event)
+        return getOutcomePrice(event.home_team, preferedBookmarker.markets[0].outcomes)
+      }else{
+        return getOutcomePrice(event.home_team, event.bookmakers[0].markets[0].outcomes)
+      }
+    } catch (e) {
+      console.log('Error getting home team price: ' + e)
+      return 0
+    }
+  }
+
+  // get bookmarker price for away team
+  function getAwayTeamPrice(event : Event) {
+    try{
+      if(!event.bookmakers[0].markets[0]){
+        return 0
+      }
+      if( hasPreferedMarket(event) ) {
+        const preferedBookmarker = getPreferedBookmarker(event)
+        return getOutcomePrice(event.away_team, preferedBookmarker.markets[0].outcomes)
+      }else{
+        return getOutcomePrice(event.away_team, event.bookmakers[0].markets[0].outcomes)
+      }
+    } catch (e) {
+      console.log('Error getting away team price: ' + e)
+      return 0
+    }
+  }
+
+  async function insertEvent(event: Event) {
+
+    const homeTeamPrice = getHomeTeamPrice(event)
+    const awayTeamPrice = getAwayTeamPrice(event)
+
     const { data, error } = await supabase
       .from('events')
       .insert({
-        id: fight.id,
-        sport_key: fight.sport_key,
-        sport_title: fight.sport_title,
-        commence_time: fight.commence_time,
-        completed: fight.completed,
-        home_team: fight.home_team,
-        away_team: fight.away_team,
-        scores: fight.scores,
-        last_updated: fight.last_updated
+        id: event.id,
+        sport_key: event.sport_key,
+        sport_title: event.sport_title,
+        commence_time: event.commence_time,
+        completed: event.completed,
+        home_team: event.home_team,
+        away_team: event.away_team,
+        scores: null,
+        last_updated: null,
+        home_team_price: homeTeamPrice,
+        awayTeamPrice: awayTeamPrice 
       })
       .select('*')
       .single();
@@ -93,6 +256,31 @@ export async function GET(request: Request) {
       throw error;
     }
     return data;
+  }
+
+  async function updateOdds(event: Event) {
+    try {
+
+      if(event.bookmakers.length == 0) return
+
+      const homeTeamPrice = getHomeTeamPrice(event)
+      const awayTeamPrice = getAwayTeamPrice(event)
+  
+      const { data, error } = await supabase
+        .from('events')
+        .update({
+          home_team_price: homeTeamPrice,
+          away_team_price: awayTeamPrice
+        })
+        .eq('id', event.id);
+  
+      if (error) throw error;
+      return data;
+      
+    } catch (error) {
+      console.error('Update error:', error);
+      return null;
+    }
   }
 
   async function updateEvent(fight:ScoreResponse) {
@@ -118,21 +306,46 @@ export async function GET(request: Request) {
     }
   }
 
+  function combineOddsAndScoreData(oddsData : OddsResponse[], scoresData : ScoreResponse[]) {
+    let events = []
+    for(const odds of oddsData) {
+      let event = odds as Event
+      for (const score of scoresData) {
+        if ( odds.id == score.id ) {
+          event.scores = score.scores
+          event.last_updated = score.last_updated
+          break
+        } 
+      }
+      events.push(event)
+    }
+    return events
+  }
+
   // create or update fight events in db
-  async function updateFights(fights : ScoreResponse[]) {
-    let apiEventCount = fights.length
+  // get from /odds
+  // insert if new
+  async function updateFights() {
+
+    const oddsData = await getOdds() as Event[] // get /odds
+
+    // some metrics to log...  
+    let apiEventCount = oddsData.length
     let insertedCount = 0
     let updateCount = 0
-    for ( const fight of fights ) {
-        if (!dbContainsEvent(fight)) { // event not yet in db -> add it
-            const insertRes = await insertEvent(fight)
+
+    // for each event, insert new & update completed
+    for ( const event of oddsData ) {
+        if (!dbContainsEvent(event)) { // event not yet in db -> add it
+            const insertRes = await insertEvent(event)
             insertedCount++
         }else{ // event in db -> check for score update
-            // api res fight completed, db event not complete, then update db with final score
-            if( fight.completed == "true" && (!await getEventCompleted(fight)) ) { 
-                updateEvent(fight)
-                updateCount++
-            }
+            // if( event.completed == "true" && (!await getEventCompleted(event)) ) { 
+            //     console.log('updating event')
+            //     updateEvent(event)
+            //     updateCount++
+            // }
+            updateOdds(event) // aslo update odds 
         }
     }
 
@@ -147,11 +360,9 @@ export async function GET(request: Request) {
   const supabase = await createClient();
   
   try {
-    const fights = await getFights()
-    await updateFights(fights)
+    await updateFights()
     const { data, error } = await supabase.from('testTbl').select('*');
     if (error) throw error;
-    console.log('Cron job results:', data);
     return NextResponse.json({
       success: true,
       count: data.length,
