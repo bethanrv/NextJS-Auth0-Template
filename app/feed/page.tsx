@@ -20,16 +20,6 @@ interface dbEvent {
   last_updated : string | null;
 }
 
-
-interface Session {
-  accessToken: string;
-  accessTokenExpiresAt: number;
-  accessTokenScope: string;
-  idToken: string;
-  token_type: string;
-  user: User;
-}
-
 interface User {
   email: string;
   email_verified: boolean;
@@ -88,7 +78,7 @@ function filterUpcomingEvents(events: dbEvent[]):dbEvent[] {
 }
 
 // insert new user
-async function insertUser(session : Session, supabase : any) {
+async function insertUser(session : any, supabase : any) {
 
   if (!session?.user)
     throw new Error("Error on insertUser, session: " + session)
@@ -113,7 +103,7 @@ async function insertUser(session : Session, supabase : any) {
   return data;
 }
 
-async function isUserInDB(session: Session, supabase: any) {
+async function isUserInDB(session: any, supabase: any) {
   try {
     const { count, error } = await supabase
       .from('users')
@@ -128,7 +118,7 @@ async function isUserInDB(session: Session, supabase: any) {
   }
 }
 
-async function getDBUserInfo(session: Session, supabase: any) {
+async function getDBUserInfo(session: any, supabase: any) {
   try{
     const {data, error} = await supabase.from('users').select('*').eq('sid', session.user.sid);
     if (error) throw error;
@@ -140,7 +130,7 @@ async function getDBUserInfo(session: Session, supabase: any) {
 }
   
 // get user info from supabase
-async function getDatabaseUser(session : Session, supabase : any) {
+async function getDatabaseUser(session : any, supabase : any) {
 
   let userInfo
 
