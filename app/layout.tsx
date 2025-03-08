@@ -27,8 +27,7 @@ const protestGuerrilla = Protest_Guerrilla({
   weight: '400', // This font only has 1 weight
   subsets: ['latin'],
   variable: '--font-card-header',
-  display: 'swap',
-  adjustFontFallback: 'Protest Guerrilla' 
+  display: 'swap'
 });
 
 export const metadata: Metadata = {
