@@ -345,7 +345,7 @@ export async function GET(request: Request) {
             //     updateEvent(event)
             //     updateCount++
             // }
-            updateOdds(event) // aslo update odds 
+            // updateOdds(event) // aslo update odds 
         }
     }
 
