@@ -196,7 +196,8 @@ async function insertFight(supabase, fight) {
         fighter_1_id: fight.fighters.fighter_1.fighter_id,
         fighter_2_id: fight.fighters.fighter_2.fighter_id,
         division_name: fight.division.name,
-        division_weight_lb: fight.division.weight_lb
+        division_weight_lb: fight.division.weight_lb,
+        poster_image_url: fight.event.poster_image_url
     }).select('*').single();
     if (error) {
         console.error('Insert error:', error);
@@ -232,10 +233,11 @@ async function GET(request) {
     }
     // start db client
     const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$supabase$2f$server$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createClient"])();
-    await deleteFights(supabase);
+    // await deleteFights(supabase)
     // add new fights
     try {
-        // await updateFights(supabase)
+        await updateFights(supabase) // get fights from the betting api and add any new results
+        ;
         return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$server$2e$js__$5b$app$2d$route$5d$__$28$ecmascript$29$__["NextResponse"].json({
             success: true
         });

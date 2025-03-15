@@ -1,3 +1,4 @@
 {
+  "/api/cron-update/route": "app/api/cron-update/route.js",
   "/api/cron-write/route": "app/api/cron-write/route.js"
 }
