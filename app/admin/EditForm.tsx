@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 interface EditFormProps {
-  initialHomeTeam: string;
-  initialAwayTeam: string;
-  event: Event;
+  initialName1: string;
+  initialName2: string;
+  event: Fight;
 }
 
 interface Event {
@@ -20,13 +20,36 @@ interface Event {
   last_updated: string;
 }
 
+interface Fight {
+  id : number
+  created_at: string,
+  title: string,
+  slug: string,
+  date: string,
+  location: string,
+  status: string,
+  scheduled_rounds: number,
+  result_outcome: string | null,
+  result_round: string | null,
+  fighter_1_name: string,
+  fighter_2_name: string,
+  fighter_1_id: string | null,
+  fighter_2_id: string | null,
+  fighter_1_is_winner: string | null,
+  fighter_2_is_winner: string | null,
+  division_name: string | null,
+  division_weight_lb: number,
+  event_id: string,
+  poster_image_url: string | null
+}
+
 export default function EditForm({
-  initialHomeTeam,
-  initialAwayTeam,
+  initialName1,
+  initialName2,
   event,
 }: EditFormProps) {
-  const [homeTeam, setHomeTeam] = useState(initialHomeTeam);
-  const [awayTeam, setAwayTeam] = useState(initialAwayTeam);
+  const [name1, setName1] = useState(initialName1);
+  const [name2, setName2] = useState(initialName2);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -38,15 +61,15 @@ export default function EditForm({
     setSuccess(false);
 
     try {
-      const response = await fetch("/api/protected/updateEvent/", {
+      const response = await fetch("/api/protected/updateFight/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           id: event.id,
-          home_team: homeTeam,
-          away_team: awayTeam
+          fighter_1_name: name1,
+          fighter__name: name2
         }),
       });
 
@@ -70,8 +93,8 @@ export default function EditForm({
         <label className="block font-medium">Name 1</label>
         <input
           type="text"
-          value={homeTeam}
-          onChange={(e) => setHomeTeam(e.target.value)}
+          value={name1}
+          onChange={(e) => setName1(e.target.value)}
           className="border p-2 rounded w-full"
           disabled={loading}
         />
@@ -80,8 +103,8 @@ export default function EditForm({
         <label className="block font-medium">Name 2</label>
         <input
           type="text"
-          value={awayTeam}
-          onChange={(e) => setAwayTeam(e.target.value)}
+          value={name2}
+          onChange={(e) => setName2(e.target.value)}
           className="border p-2 rounded w-full"
           disabled={loading}
         />

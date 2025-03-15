@@ -14,10 +14,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var _s = __turbopack_refresh__.signature();
 "use client";
 ;
-function EditForm({ initialHomeTeam, initialAwayTeam, event }) {
+function EditForm({ initialName1, initialName2, event }) {
     _s();
-    const [homeTeam, setHomeTeam] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialHomeTeam);
-    const [awayTeam, setAwayTeam] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialAwayTeam);
+    const [name1, setName1] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialName1);
+    const [name2, setName2] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialName2);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [success, setSuccess] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -27,15 +27,15 @@ function EditForm({ initialHomeTeam, initialAwayTeam, event }) {
         setError("");
         setSuccess(false);
         try {
-            const response = await fetch("/api/protected/updateEvent/", {
+            const response = await fetch("/api/protected/updateFight/", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
                     id: event.id,
-                    home_team: homeTeam,
-                    away_team: awayTeam
+                    fighter_1_name: name1,
+                    fighter__name: name2
                 })
             });
             if (!response.ok) {
@@ -61,24 +61,24 @@ function EditForm({ initialHomeTeam, initialAwayTeam, event }) {
                         children: "Name 1"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 70,
+                        lineNumber: 93,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                         type: "text",
-                        value: homeTeam,
-                        onChange: (e)=>setHomeTeam(e.target.value),
+                        value: name1,
+                        onChange: (e)=>setName1(e.target.value),
                         className: "border p-2 rounded w-full",
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 71,
+                        lineNumber: 94,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 69,
+                lineNumber: 92,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -88,24 +88,24 @@ function EditForm({ initialHomeTeam, initialAwayTeam, event }) {
                         children: "Name 2"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 80,
+                        lineNumber: 103,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                         type: "text",
-                        value: awayTeam,
-                        onChange: (e)=>setAwayTeam(e.target.value),
+                        value: name2,
+                        onChange: (e)=>setName2(e.target.value),
                         className: "border p-2 rounded w-full",
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 81,
+                        lineNumber: 104,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 79,
+                lineNumber: 102,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -115,7 +115,7 @@ function EditForm({ initialHomeTeam, initialAwayTeam, event }) {
                 children: loading ? "Updating..." : "Submit"
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 89,
+                lineNumber: 112,
                 columnNumber: 7
             }, this),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -123,7 +123,7 @@ function EditForm({ initialHomeTeam, initialAwayTeam, event }) {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 96,
+                lineNumber: 119,
                 columnNumber: 17
             }, this),
             success && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -131,17 +131,17 @@ function EditForm({ initialHomeTeam, initialAwayTeam, event }) {
                 children: "Event updated successfully ✅"
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 98,
+                lineNumber: 121,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/EditForm.tsx",
-        lineNumber: 68,
+        lineNumber: 91,
         columnNumber: 5
     }, this);
 }
-_s(EditForm, "ynii9UmrIab6Gd+FSnxUM73V1tk=");
+_s(EditForm, "1c7auTTx8SQRwVQ1aMe9N90oEi8=");
 _c = EditForm;
 var _c;
 __turbopack_refresh__.register(_c, "EditForm");
@@ -180,30 +180,30 @@ function EventItem({ event }) {
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 className: "text-lg font-medium",
                                 children: [
-                                    event.home_team,
+                                    event.fighter_1_name,
                                     " vs ",
-                                    event.away_team
+                                    event.fighter_2_name
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/EventItem.tsx",
-                                lineNumber: 26,
+                                lineNumber: 49,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 className: "text-sm text-gray-600",
                                 children: [
                                     "Commence Time: ",
-                                    new Date(event.commence_time).toLocaleString()
+                                    new Date(event.date).toLocaleString()
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/EventItem.tsx",
-                                lineNumber: 29,
+                                lineNumber: 52,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/EventItem.tsx",
-                        lineNumber: 25,
+                        lineNumber: 48,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -215,40 +215,40 @@ function EventItem({ event }) {
                             className: "w-5 h-5"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/EventItem.tsx",
-                            lineNumber: 37,
+                            lineNumber: 60,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EventItem.tsx",
-                        lineNumber: 33,
+                        lineNumber: 56,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EventItem.tsx",
-                lineNumber: 24,
+                lineNumber: 47,
                 columnNumber: 7
             }, this),
             isEditing && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "mt-2",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$admin$2f$EditForm$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                     event: event,
-                    initialHomeTeam: event.home_team,
-                    initialAwayTeam: event.away_team
+                    initialName1: event.fighter_1_name,
+                    initialName2: event.fighter_2_name
                 }, void 0, false, {
                     fileName: "[project]/app/admin/EventItem.tsx",
-                    lineNumber: 43,
+                    lineNumber: 66,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/admin/EventItem.tsx",
-                lineNumber: 42,
+                lineNumber: 65,
                 columnNumber: 9
             }, this)
         ]
     }, event.id, true, {
         fileName: "[project]/app/admin/EventItem.tsx",
-        lineNumber: 23,
+        lineNumber: 46,
         columnNumber: 5
     }, this);
 }

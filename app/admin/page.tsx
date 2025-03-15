@@ -16,38 +16,61 @@ interface Event {
   last_updated: string;
 }
 
+interface Fight {
+  id : number
+  created_at: string,
+  title: string,
+  slug: string,
+  date: string,
+  location: string,
+  status: string,
+  scheduled_rounds: number,
+  result_outcome: string | null,
+  result_round: string | null,
+  fighter_1_name: string,
+  fighter_2_name: string,
+  fighter_1_id: string | null,
+  fighter_2_id: string | null,
+  fighter_1_is_winner: string | null,
+  fighter_2_is_winner: string | null,
+  division_name: string | null,
+  division_weight_lb: number,
+  event_id: string,
+  poster_image_url: string | null
+}
+
 // Return past events
-function filterPastEvents(events: Event[]):Event[] {
+function filterPastEvents(events: Fight[]):Fight[] {
   if (!events || !Array.isArray(events))
     throw new Error("events not array: " + events);
-  let pastEvents: Event[] = [];
-  events.forEach((event: Event) => {
-    if (event.completed === "true") pastEvents.push(event);
+  let pastEvents: Fight[] = [];
+  events.forEach((event: Fight) => {
+    if (event.status === "FINISHED") pastEvents.push(event);
   });
   return pastEvents;
 }
 
 // Return current events (non-complete and already commenced)
-function filterCurrentEvents(events: Event[]):Event[] {
+function filterCurrentEvents(events: Fight[]):Fight[] {
   if (!events || !Array.isArray(events))
     throw new Error("events not array: " + events);
   const currentTime = new Date();
-  let currentEvents: Event[] = [];
-  events.forEach((event: Event) => {
-    if (event.completed === "false" && new Date(event.commence_time) < currentTime)
+  let currentEvents: Fight[] = [];
+  events.forEach((event: Fight) => {
+    if (event.status !== "FINISHED" && new Date(event.date) < currentTime)
       currentEvents.push(event);
   });
   return currentEvents;
 }
 
 // Return upcoming events
-function filterUpcomingEvents(events: Event[]):Event[] {
+function filterUpcomingEvents(events: Fight[]):Fight[] {
   if (!events || !Array.isArray(events))
     throw new Error("events not array: " + events);
   const currentTime = new Date();
-  let upcomingEvents: Event[] = [];
-  events.forEach((event: Event) => {
-    if (event.completed === "false" && new Date(event.commence_time) > currentTime)
+  let upcomingEvents: Fight[] = [];
+  events.forEach((event: Fight) => {
+    if (event.status === "NOT_STARTED")
       upcomingEvents.push(event);
   });
   return upcomingEvents;
@@ -63,15 +86,15 @@ async function AdminPage() {
 
   // Create Supabase client and query events
   const supabase = await createClient();
-  let { data: events, error } = await supabase.from("events").select();
-  console.log("Events:", events, "Error:", error);
+  let { data: fights, error } = await supabase.from("fights").select().order('date', {ascending : true});
+  console.log("Fights:", fights, "Error:", error);
 
-  events = events as Event[]
+  fights = fights as Fight[]
 
   // filter events
-  const currentEvents = filterCurrentEvents(events)
-  const upcomingEvents = filterUpcomingEvents(events)
-  const pastEvents = filterPastEvents(events)
+  const currentEvents = filterCurrentEvents(fights)
+  const upcomingEvents = filterUpcomingEvents(fights)
+  const pastEvents = filterPastEvents(fights)
 
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

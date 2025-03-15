@@ -3,7 +3,9 @@
   "app": {
     "[project]/app/unauthorized/page": [
       "static/media/GeistVF-s.p.7fe29570.woff",
-      "static/media/GeistMonoVF-s.p.a9159d35.woff"
+      "static/media/GeistMonoVF-s.p.a9159d35.woff",
+      "static/media/HhyaU5sn9vOmLzloC_WoEoZK-s.p.8d290f7d.woff2",
+      "static/media/Qw3HZR5PDSL6K3irtrY_VJB2YzARHW0jqp4Q_viT-s.p.c3a4c3db.woff2"
     ]
   },
   "appUsingSizeAdjust": true,

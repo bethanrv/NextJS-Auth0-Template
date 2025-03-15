@@ -16,7 +16,30 @@ interface Event {
   last_updated: string;
 }
 
-export default function EventItem({ event }: { event: Event }) {
+interface Fight {
+  id : number
+  created_at: string,
+  title: string,
+  slug: string,
+  date: string,
+  location: string,
+  status: string,
+  scheduled_rounds: number,
+  result_outcome: string | null,
+  result_round: string | null,
+  fighter_1_name: string,
+  fighter_2_name: string,
+  fighter_1_id: string | null,
+  fighter_2_id: string | null,
+  fighter_1_is_winner: string | null,
+  fighter_2_is_winner: string | null,
+  division_name: string | null,
+  division_weight_lb: number,
+  event_id: string,
+  poster_image_url: string | null
+}
+
+export default function EventItem({ event }: { event: Fight }) {
   const [isEditing, setIsEditing] = useState(false);
 
   return (
@@ -24,10 +47,10 @@ export default function EventItem({ event }: { event: Event }) {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-lg font-medium">
-            {event.home_team} vs {event.away_team}
+            {event.fighter_1_name} vs {event.fighter_2_name}
           </p>
           <p className="text-sm text-gray-600">
-            Commence Time: {new Date(event.commence_time).toLocaleString()}
+            Commence Time: {new Date(event.date).toLocaleString()}
           </p>
         </div>
         <button
@@ -40,7 +63,7 @@ export default function EventItem({ event }: { event: Event }) {
       {/* Conditionally render the edit form */}
       {isEditing && (
         <div className="mt-2">
-          <EditForm event={event} initialHomeTeam={event.home_team} initialAwayTeam={event.away_team} />
+          <EditForm event={event} initialName1={event.fighter_1_name} initialName2={event.fighter_2_name} />
         </div>
       )}
     </li>

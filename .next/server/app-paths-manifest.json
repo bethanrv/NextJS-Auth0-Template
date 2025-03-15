@@ -1,4 +1,8 @@
 {
-  "/api/cron-update/route": "app/api/cron-update/route.js",
-  "/api/cron-write/route": "app/api/cron-write/route.js"
+  "/page": "app/page.js",
+  "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/auth/[auth0]/route": "app/api/auth/[auth0]/route.js",
+  "/admin/page": "app/admin/page.js",
+  "/unauthorized/page": "app/unauthorized/page.js",
+  "/api/protected/updateFight/route": "app/api/protected/updateFight/route.js"
 }

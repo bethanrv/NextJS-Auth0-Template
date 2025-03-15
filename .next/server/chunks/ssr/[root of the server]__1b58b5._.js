@@ -326,7 +326,7 @@ function filterPastEvents(events) {
     if (!events || !Array.isArray(events)) throw new Error("events not array: " + events);
     let pastEvents = [];
     events.forEach((event)=>{
-        if (event.completed === "true") pastEvents.push(event);
+        if (event.status === "FINISHED") pastEvents.push(event);
     });
     return pastEvents;
 }
@@ -336,7 +336,7 @@ function filterCurrentEvents(events) {
     const currentTime = new Date();
     let currentEvents = [];
     events.forEach((event)=>{
-        if (event.completed === "false" && new Date(event.commence_time) < currentTime) currentEvents.push(event);
+        if (event.status !== "FINISHED" && new Date(event.date) < currentTime) currentEvents.push(event);
     });
     return currentEvents;
 }
@@ -346,7 +346,7 @@ function filterUpcomingEvents(events) {
     const currentTime = new Date();
     let upcomingEvents = [];
     events.forEach((event)=>{
-        if (event.completed === "false" && new Date(event.commence_time) > currentTime) upcomingEvents.push(event);
+        if (event.status === "NOT_STARTED") upcomingEvents.push(event);
     });
     return upcomingEvents;
 }
@@ -357,13 +357,15 @@ async function AdminPage() {
     }
     // Create Supabase client and query events
     const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createClient"])();
-    let { data: events, error } = await supabase.from("events").select();
-    console.log("Events:", events, "Error:", error);
-    events = events;
+    let { data: fights, error } = await supabase.from("fights").select().order('date', {
+        ascending: true
+    });
+    console.log("Fights:", fights, "Error:", error);
+    fights = fights;
     // filter events
-    const currentEvents = filterCurrentEvents(events);
-    const upcomingEvents = filterUpcomingEvents(events);
-    const pastEvents = filterPastEvents(events);
+    const currentEvents = filterCurrentEvents(fights);
+    const upcomingEvents = filterUpcomingEvents(fights);
+    const pastEvents = filterPastEvents(fights);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8",
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -376,7 +378,7 @@ async function AdminPage() {
                         children: "Admin Dashboard"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/page.tsx",
-                        lineNumber: 80,
+                        lineNumber: 103,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -384,7 +386,7 @@ async function AdminPage() {
                         children: "Welcome to the admin area. This page is only accessible to administrators."
                     }, void 0, false, {
                         fileName: "[project]/app/admin/page.tsx",
-                        lineNumber: 83,
+                        lineNumber: 106,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -395,7 +397,7 @@ async function AdminPage() {
                                 children: "Happening Now"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 88,
+                                lineNumber: 111,
                                 columnNumber: 13
                             }, this),
                             currentEvents.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -404,25 +406,25 @@ async function AdminPage() {
                                         event: event
                                     }, event.id, false, {
                                         fileName: "[project]/app/admin/page.tsx",
-                                        lineNumber: 94,
+                                        lineNumber: 117,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 92,
+                                lineNumber: 115,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 className: "text-gray-600",
                                 children: "There are no events happening right now."
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 98,
+                                lineNumber: 121,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.tsx",
-                        lineNumber: 87,
+                        lineNumber: 110,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -433,7 +435,7 @@ async function AdminPage() {
                                 children: "Upcoming Events"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 104,
+                                lineNumber: 127,
                                 columnNumber: 13
                             }, this),
                             upcomingEvents.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -442,25 +444,25 @@ async function AdminPage() {
                                         event: event
                                     }, event.id, false, {
                                         fileName: "[project]/app/admin/page.tsx",
-                                        lineNumber: 110,
+                                        lineNumber: 133,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 108,
+                                lineNumber: 131,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 className: "text-gray-600",
                                 children: "There are no upcoming events."
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 114,
+                                lineNumber: 137,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.tsx",
-                        lineNumber: 103,
+                        lineNumber: 126,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -471,7 +473,7 @@ async function AdminPage() {
                                 children: "Past Events"
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 120,
+                                lineNumber: 143,
                                 columnNumber: 13
                             }, this),
                             pastEvents.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -480,41 +482,41 @@ async function AdminPage() {
                                         event: event
                                     }, event.id, false, {
                                         fileName: "[project]/app/admin/page.tsx",
-                                        lineNumber: 126,
+                                        lineNumber: 149,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 124,
+                                lineNumber: 147,
                                 columnNumber: 15
                             }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                 className: "text-gray-600",
                                 children: "There are no completed events."
                             }, void 0, false, {
                                 fileName: "[project]/app/admin/page.tsx",
-                                lineNumber: 130,
+                                lineNumber: 153,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/page.tsx",
-                        lineNumber: 119,
+                        lineNumber: 142,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/page.tsx",
-                lineNumber: 79,
+                lineNumber: 102,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/admin/page.tsx",
-            lineNumber: 78,
+            lineNumber: 101,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/admin/page.tsx",
-        lineNumber: 77,
+        lineNumber: 100,
         columnNumber: 5
     }, this);
 }
