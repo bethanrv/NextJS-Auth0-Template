@@ -4,7 +4,28 @@ import FeedItem from "./FeedItem"; // Adjust the import path as necessary
 import ProfileImage from "@/components/ProfileImage";
 import { getSession } from "@auth0/nextjs-auth0";
 
-
+interface Fight {
+  id : number
+  created_at: string,
+  title: string,
+  slug: string,
+  date: string,
+  location: string,
+  status: string,
+  scheduled_rounds: number,
+  result_outcome: string | null,
+  result_round: string | null,
+  fighter_1_name: string,
+  fighter_2_name: string,
+  fighter_1_id: string | null,
+  fighter_2_id: string | null,
+  fighter_1_is_winner: string | null,
+  fighter_2_is_winner: string | null,
+  division_name: string | null,
+  division_weight_lb: number,
+  event_id: string,
+  poster_image_url: string | null
+}
 
 interface dbEvent {
   id: string;
@@ -41,40 +62,40 @@ interface DbUser {
 }
 
 // Return past events
-function filterPastEvents(events: dbEvent[]):dbEvent[] {
-    if (!events || !Array.isArray(events))
-      throw new Error("events not array: " + events);
-    let pastEvents: dbEvent[] = [];
-    events.forEach((event: dbEvent) => {
-      if (event.completed === "true") pastEvents.push(event);
-    });
-    return pastEvents;
+function filterPastEvents(events: Fight[]):Fight[] {
+  if (!events || !Array.isArray(events))
+    throw new Error("events not array: " + events);
+  let pastEvents: Fight[] = [];
+  events.forEach((event: Fight) => {
+    if (event.status === "FINISHED") pastEvents.push(event);
+  });
+  return pastEvents;
 }
-  
+
 // Return current events (non-complete and already commenced)
-function filterCurrentEvents(events: dbEvent[]):dbEvent[] {
-    if (!events || !Array.isArray(events))
-      throw new Error("events not array: " + events);
-    const currentTime = new Date();
-    let currentEvents: dbEvent[] = [];
-    events.forEach((event: dbEvent) => {
-      if (event.completed === "false" && new Date(event.commence_time) < currentTime)
-        currentEvents.push(event);
-    });
-    return currentEvents;
+function filterCurrentEvents(events: Fight[]):Fight[] {
+  if (!events || !Array.isArray(events))
+    throw new Error("events not array: " + events);
+  const currentTime = new Date();
+  let currentEvents: Fight[] = [];
+  events.forEach((event: Fight) => {
+    if (event.status !== "FINISHED" && new Date(event.date) < currentTime)
+      currentEvents.push(event);
+  });
+  return currentEvents;
 }
-  
+
 // Return upcoming events
-function filterUpcomingEvents(events: dbEvent[]):dbEvent[] {
-    if (!events || !Array.isArray(events))
-      throw new Error("events not array: " + events);
-    const currentTime = new Date();
-    let upcomingEvents: dbEvent[] = [];
-    events.forEach((event: dbEvent) => {
-      if (event.completed === "false" && new Date(event.commence_time) > currentTime)
-        upcomingEvents.push(event);
-    });
-    return upcomingEvents;
+function filterUpcomingEvents(events: Fight[]):Fight[] {
+  if (!events || !Array.isArray(events))
+    throw new Error("events not array: " + events);
+  const currentTime = new Date();
+  let upcomingEvents: Fight[] = [];
+  events.forEach((event: Fight) => {
+    if (event.status === "NOT_STARTED")
+      upcomingEvents.push(event);
+  });
+  return upcomingEvents;
 }
 
 // insert new user
@@ -152,9 +173,9 @@ async function FeedPage() {
 
   // Create Supabase client and query events
   const supabase = await createClient();
-  let { data: events, error } = await supabase.from("events").select();
-  console.log("Events:", events, "Error:", error);
-  events = events as dbEvent[]
+  let { data: events, error } = await supabase.from("fights").select();
+  console.log("Fights:", events, "Error:", error);
+  events = events as Fight[]
 
   // filter events
   const currentEvents = filterCurrentEvents(events)
@@ -182,32 +203,29 @@ async function FeedPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-white shadow p-6">
+        <div className="bg-black shadow p-6">
         
           {session ? (
             <div style={{justifyContent: 'end', alignItems:'center'}} className="flex">
                 <div style={{justifyContent: 'end', alignItems:'center', border: '1px solid black', borderRadius: '5px', marginRight: '0.5rem', padding: '0.25rem'}} className="flex">
-                    <p style={{fontSize:'14px'}}> { dbUserInfo[0]?.tokens ?? 100 } </p>
+                    <p className="text-white" style={{fontSize:'14px'}}> { dbUserInfo[0]?.tokens ?? 100 } </p>
                     <img src="/coin.svg" alt="Edit" style={{height:'1.5rem'}} />
                 </div>
                 <ProfileImage />
             </div>
           ) : (
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+            <h2 className="text-xl font-semibold text-white mb-4">
             Please login to bet credits
             </h2>
           )}
 
-          <h1 className="text-3xl font-bold text-gray-900 mb-6">
-            Feed
-          </h1>
-          <p className="text-gray-600 mb-4">
-            Welcome to PnB Betting
+          <p className="text-gray-600 mb-4 text-white">
+            Welcome to PnB
           </p>
 
           {currentEvents.length > 0 ? (
           <div className="border-t border-gray-200 pt-4">
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">
+            <h2 className="text-xl font-semibold text-white mb-3">
               Happening Now
             </h2>
               <ul className="space-y-2">
@@ -219,7 +237,7 @@ async function FeedPage() {
 
           {upcomingEvents.length > 0 ? (
           <div className="border-t border-gray-200 pt-4">
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">
+            <h2 className="text-xl font-semibold text-white mb-3">
             Upcoming Fights
             </h2>
               <ul className="space-y-2">
@@ -231,7 +249,7 @@ async function FeedPage() {
 
           {pastEvents.length > 0 ? (
           <div className="border-t border-gray-200 pt-4">
-            <h2 className="text-xl font-semibold text-gray-800 mb-3">
+            <h2 className="text-xl font-semibold text-white mb-3">
             Past Events
             </h2>
               <ul className="space-y-2">

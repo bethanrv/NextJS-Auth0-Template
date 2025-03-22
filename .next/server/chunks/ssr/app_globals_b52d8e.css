@@ -509,6 +509,11 @@ img, video {
   border-top-color: rgb(59 130 246 / var(--tw-border-opacity, 1));
 }
 
+.bg-black {
+  --tw-bg-opacity: 1;
+  background-color: rgb(0 0 0 / var(--tw-bg-opacity, 1));
+}
+
 .bg-blue-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
@@ -740,6 +745,16 @@ img, video {
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
 
+.blur {
+  --tw-blur: blur(8px);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
+.grayscale {
+  --tw-grayscale: grayscale(100%);
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
@@ -801,13 +816,19 @@ body {
 
 .fightCardTitle {
   font-weight: bold;
-  font-size: 2rem;
   font-family: var(--font-card-header), sans-serif;
   display: flex;
+  font-size: clamp(1rem, 8.333vw - .875rem, 3.5rem);
 }
 
 .fightCardTitle p {
   margin: .25rem;
+}
+
+.cardHeaderTxt {
+  font-weight: bold;
+  font-size: 2rem;
+  font-family: var(--font-card-header), sans-serif;
 }
 
 .feed-item {
@@ -823,6 +844,20 @@ body {
   color: #000;
   margin-top: 1rem;
   font-weight: 500;
+}
+
+.square-container {
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.square-image {
+  width: clamp(1rem, 16.333vw - .875rem, 10rem);
+  height: clamp(1rem, 16.333vw - .875rem, 10rem);
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
 }
 
 .hover\:bg-blue-600:hover {

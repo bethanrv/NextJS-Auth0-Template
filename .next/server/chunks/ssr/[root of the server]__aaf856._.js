@@ -242,7 +242,7 @@ function filterPastEvents(events) {
     if (!events || !Array.isArray(events)) throw new Error("events not array: " + events);
     let pastEvents = [];
     events.forEach((event)=>{
-        if (event.completed === "true") pastEvents.push(event);
+        if (event.status === "FINISHED") pastEvents.push(event);
     });
     return pastEvents;
 }
@@ -252,7 +252,7 @@ function filterCurrentEvents(events) {
     const currentTime = new Date();
     let currentEvents = [];
     events.forEach((event)=>{
-        if (event.completed === "false" && new Date(event.commence_time) < currentTime) currentEvents.push(event);
+        if (event.status !== "FINISHED" && new Date(event.date) < currentTime) currentEvents.push(event);
     });
     return currentEvents;
 }
@@ -262,7 +262,7 @@ function filterUpcomingEvents(events) {
     const currentTime = new Date();
     let upcomingEvents = [];
     events.forEach((event)=>{
-        if (event.completed === "false" && new Date(event.commence_time) > currentTime) upcomingEvents.push(event);
+        if (event.status === "NOT_STARTED") upcomingEvents.push(event);
     });
     return upcomingEvents;
 }
@@ -322,8 +322,8 @@ function getTokenCount(dbUserInfo) {}
 async function FeedPage() {
     // Create Supabase client and query events
     const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$supabase$2f$server$2e$ts__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["createClient"])();
-    let { data: events, error } = await supabase.from("events").select();
-    console.log("Events:", events, "Error:", error);
+    let { data: events, error } = await supabase.from("fights").select();
+    console.log("Fights:", events, "Error:", error);
     events = events;
     // filter events
     const currentEvents = filterCurrentEvents(events);
@@ -348,7 +348,7 @@ async function FeedPage() {
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "max-w-4xl mx-auto",
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "bg-white shadow p-6",
+                className: "bg-black shadow p-6",
                 children: [
                     session ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         style: {
@@ -369,6 +369,7 @@ async function FeedPage() {
                                 className: "flex",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-white",
                                         style: {
                                             fontSize: '14px'
                                         },
@@ -379,7 +380,7 @@ async function FeedPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/feed/page.tsx",
-                                        lineNumber: 200,
+                                        lineNumber: 211,
                                         columnNumber: 21
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
@@ -390,58 +391,50 @@ async function FeedPage() {
                                         }
                                     }, void 0, false, {
                                         fileName: "[project]/app/feed/page.tsx",
-                                        lineNumber: 201,
+                                        lineNumber: 212,
                                         columnNumber: 21
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 199,
+                                lineNumber: 210,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$components$2f$ProfileImage$2e$tsx__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 203,
+                                lineNumber: 214,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/page.tsx",
-                        lineNumber: 198,
+                        lineNumber: 209,
                         columnNumber: 13
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                        className: "text-xl font-semibold text-gray-800 mb-4",
+                        className: "text-xl font-semibold text-white mb-4",
                         children: "Please login to bet credits"
                     }, void 0, false, {
                         fileName: "[project]/app/feed/page.tsx",
-                        lineNumber: 206,
+                        lineNumber: 217,
                         columnNumber: 13
                     }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                        className: "text-3xl font-bold text-gray-900 mb-6",
-                        children: "Feed"
-                    }, void 0, false, {
-                        fileName: "[project]/app/feed/page.tsx",
-                        lineNumber: 211,
-                        columnNumber: 11
-                    }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-gray-600 mb-4",
-                        children: "Welcome to PnB Betting"
+                        className: "text-gray-600 mb-4 text-white",
+                        children: "Welcome to PnB"
                     }, void 0, false, {
                         fileName: "[project]/app/feed/page.tsx",
-                        lineNumber: 214,
+                        lineNumber: 222,
                         columnNumber: 11
                     }, this),
                     currentEvents.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "border-t border-gray-200 pt-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                className: "text-xl font-semibold text-gray-800 mb-3",
+                                className: "text-xl font-semibold text-white mb-3",
                                 children: "Happening Now"
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 220,
+                                lineNumber: 228,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -451,29 +444,29 @@ async function FeedPage() {
                                         canBet: false
                                     }, event.id, false, {
                                         fileName: "[project]/app/feed/page.tsx",
-                                        lineNumber: 225,
+                                        lineNumber: 233,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 223,
+                                lineNumber: 231,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/page.tsx",
-                        lineNumber: 219,
+                        lineNumber: 227,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Fragment"], {}, void 0, false),
                     upcomingEvents.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "border-t border-gray-200 pt-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                className: "text-xl font-semibold text-gray-800 mb-3",
+                                className: "text-xl font-semibold text-white mb-3",
                                 children: "Upcoming Fights"
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 232,
+                                lineNumber: 240,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -483,29 +476,29 @@ async function FeedPage() {
                                         canBet: true
                                     }, event.id, false, {
                                         fileName: "[project]/app/feed/page.tsx",
-                                        lineNumber: 237,
+                                        lineNumber: 245,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 235,
+                                lineNumber: 243,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/page.tsx",
-                        lineNumber: 231,
+                        lineNumber: 239,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Fragment"], {}, void 0, false),
                     pastEvents.length > 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "border-t border-gray-200 pt-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                                className: "text-xl font-semibold text-gray-800 mb-3",
+                                className: "text-xl font-semibold text-white mb-3",
                                 children: "Past Events"
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 244,
+                                lineNumber: 252,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])("ul", {
@@ -515,34 +508,34 @@ async function FeedPage() {
                                         canBet: false
                                     }, event.id, false, {
                                         fileName: "[project]/app/feed/page.tsx",
-                                        lineNumber: 249,
+                                        lineNumber: 257,
                                         columnNumber: 19
                                     }, this))
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/page.tsx",
-                                lineNumber: 247,
+                                lineNumber: 255,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/page.tsx",
-                        lineNumber: 243,
+                        lineNumber: 251,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$rsc$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$rsc$5d$__$28$ecmascript$29$__["Fragment"], {}, void 0, false)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/feed/page.tsx",
-                lineNumber: 195,
+                lineNumber: 206,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/feed/page.tsx",
-            lineNumber: 194,
+            lineNumber: 205,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/app/feed/page.tsx",
-        lineNumber: 193,
+        lineNumber: 204,
         columnNumber: 5
     }, this);
 }

@@ -38,9 +38,21 @@ function FeedItem({ event, canBet }) {
     console.log(event);
     console.log(canBet);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("li", {
-        className: "feed-item p-4 bg-gray-100 rounded shadow flex flex-col",
+        className: "feed-item bg-gray-100 rounded shadow flex flex-col",
+        style: {
+            backgroundImage: `url('${event.poster_image_url}')`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            borderRadius: '10px',
+            marginBottom: '1.5rem'
+        },
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
             className: "flex items-center justify-between",
+            style: {
+                backdropFilter: 'blur(5px) brightness(60%) grayscale(50%)',
+                borderRadius: '10px'
+            },
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 style: {
                     display: 'flex',
@@ -50,128 +62,200 @@ function FeedItem({ event, canBet }) {
                 },
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "fightCardTitle",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                children: [
-                                    " ",
-                                    getLastName(event.home_team),
-                                    " "
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 65,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: getPriceClass(event.home_team_price),
-                                children: [
-                                    " ",
-                                    event.home_team_price,
-                                    " "
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 66,
-                                columnNumber: 13
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/app/feed/FeedItem.tsx",
-                        lineNumber: 64,
-                        columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "fightCardTitle",
                         style: {
-                            fontSize: '1.5rem'
+                            display: 'flex',
+                            justifyContent: 'space-evenly',
+                            alignItems: 'center',
+                            width: '100%'
                         },
-                        children: " VS. "
-                    }, void 0, false, {
-                        fileName: "[project]/app/feed/FeedItem.tsx",
-                        lineNumber: 68,
-                        columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "fightCardTitle",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                children: [
-                                    " ",
-                                    getLastName(event.away_team),
-                                    " "
-                                ]
-                            }, void 0, true, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: 'flex'
+                                },
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "square-container",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                        src: event.fighter_1_img,
+                                        className: "square-image",
+                                        alt: ""
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/feed/FeedItem.tsx",
+                                        lineNumber: 105,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/app/feed/FeedItem.tsx",
+                                    lineNumber: 104,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 70,
+                                lineNumber: 103,
                                 columnNumber: 13
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: getPriceClass(event.away_team_price),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center'
+                                },
                                 children: [
-                                    " ",
-                                    event.away_team_price,
-                                    " "
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "fightCardTitle",
+                                        style: {
+                                            marginTop: '1rem'
+                                        },
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            children: [
+                                                " ",
+                                                event.fighter_1_name,
+                                                " "
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/feed/FeedItem.tsx",
+                                            lineNumber: 111,
+                                            columnNumber: 17
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/feed/FeedItem.tsx",
+                                        lineNumber: 110,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "fightCardTitle",
+                                        style: {
+                                            fontSize: '1.5rem'
+                                        },
+                                        children: " VS. "
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/feed/FeedItem.tsx",
+                                        lineNumber: 114,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "fightCardTitle",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            children: [
+                                                " ",
+                                                event.fighter_2_name,
+                                                " "
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/app/feed/FeedItem.tsx",
+                                            lineNumber: 116,
+                                            columnNumber: 17
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/feed/FeedItem.tsx",
+                                        lineNumber: 115,
+                                        columnNumber: 15
+                                    }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 71,
+                                lineNumber: 109,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                style: {
+                                    display: 'flex'
+                                },
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "square-container",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                        src: event.fighter_2_img,
+                                        className: "square-image",
+                                        alt: ""
+                                    }, void 0, false, {
+                                        fileName: "[project]/app/feed/FeedItem.tsx",
+                                        lineNumber: 123,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/app/feed/FeedItem.tsx",
+                                    lineNumber: 122,
+                                    columnNumber: 15
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/app/feed/FeedItem.tsx",
+                                lineNumber: 121,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/FeedItem.tsx",
-                        lineNumber: 69,
+                        lineNumber: 101,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        style: {
+                            textAlign: 'center'
+                        },
                         children: [
                             " ",
-                            event.home_team,
-                            " vs. ",
-                            event.away_team,
+                            event.title,
                             " "
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/FeedItem.tsx",
-                        lineNumber: 73,
+                        lineNumber: 129,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-sm text-gray-600",
+                        style: {
+                            textAlign: 'center'
+                        },
                         children: [
-                            "Commence Time: ",
-                            new Date(event.commence_time).toLocaleString()
+                            " ",
+                            event.location,
+                            " "
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/FeedItem.tsx",
-                        lineNumber: 74,
+                        lineNumber: 130,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "text-sm",
+                        style: {
+                            textAlign: 'center',
+                            marginTop: '5px'
+                        },
+                        children: new Date(event.date).toLocaleString()
+                    }, void 0, false, {
+                        fileName: "[project]/app/feed/FeedItem.tsx",
+                        lineNumber: 131,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                        style: {
+                            marginBottom: '1rem'
+                        },
                         className: getBetBtnClass(canBet),
                         children: " Bet Now "
                     }, void 0, false, {
                         fileName: "[project]/app/feed/FeedItem.tsx",
-                        lineNumber: 77,
+                        lineNumber: 134,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/feed/FeedItem.tsx",
-                lineNumber: 63,
+                lineNumber: 99,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/app/feed/FeedItem.tsx",
-            lineNumber: 62,
+            lineNumber: 98,
             columnNumber: 7
         }, this)
     }, event.id, false, {
         fileName: "[project]/app/feed/FeedItem.tsx",
-        lineNumber: 61,
+        lineNumber: 90,
         columnNumber: 5
     }, this);
+    "TURBOPACK unreachable";
 }
 _c = FeedItem;
 var _c;

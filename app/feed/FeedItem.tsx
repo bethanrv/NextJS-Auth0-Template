@@ -1,8 +1,35 @@
 "use client";
 import { useState } from "react";
 
+interface Fight {
+  id : number
+  created_at: string,
+  title: string,
+  slug: string,
+  date: string,
+  location: string,
+  status: string,
+  scheduled_rounds: number,
+  result_outcome: string | null,
+  result_round: string | null,
+  fighter_1_name: string,
+  fighter_2_name: string,
+  fighter_1_id: string | null,
+  fighter_2_id: string | null,
+  fighter_1_is_winner: string | null,
+  fighter_2_is_winner: string | null,
+  division_name: string | null,
+  division_weight_lb: number,
+  event_id: string,
+  poster_image_url: string | null,
+  fighter_1_full_name: string,
+  fighter_2_full_name: string,
+  fighter_1_img: string,
+  fighter_2_img: string,
+}
+
 interface FeedItemProps {
-  event: dbEvent; 
+  event: Fight; 
   canBet: boolean; 
 }
 
@@ -56,27 +83,63 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
   console.log(canBet)
 
 
+
+
   return (
         
-    <li key={event.id} className="feed-item p-4 bg-gray-100 rounded shadow flex flex-col">
-      <div className="flex items-center justify-between">
+    <li key={event.id} className="feed-item bg-gray-100 rounded shadow flex flex-col"  style={{ 
+      backgroundImage: `url('${event.poster_image_url}')`,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundRepeat: 'no-repeat',
+      borderRadius: '10px',
+      marginBottom: '1.5rem'
+    }}>
+      <div className="flex items-center justify-between" style={{backdropFilter:'blur(5px) brightness(60%) grayscale(50%)', borderRadius:'10px'}}>
         <div style={{display:'flex', flexDirection:'column', alignItems:'center', width:'100%'}}>
-          <div className="fightCardTitle"> 
-            <p> {getLastName(event.home_team)} </p>
-            <p className={ getPriceClass(event.home_team_price) }> {event.home_team_price} </p>
+          
+          <div style={{display: 'flex', justifyContent:'space-evenly', alignItems:'center', width:'100%'}}>
+           
+            <div style={{display: 'flex'}}>
+              <div className="square-container">
+                <img src={event.fighter_1_img} className="square-image" alt=""/>
+              </div>
+            </div>
+
+            <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+              <div className="fightCardTitle" style={{marginTop:'1rem'}}> 
+                <p> {event.fighter_1_name} </p>
+                {/* <p className={ getPriceClass(event.home_team_price) }> {event.home_team_price} </p> */}
+              </div>
+              <p className="fightCardTitle" style={{fontSize:'1.5rem'}} > VS. </p>
+              <div className="fightCardTitle"> 
+                <p> {event.fighter_2_name} </p>
+                {/* <p className={ getPriceClass(event.away_team_price) }> {event.away_team_price} </p> */}
+              </div>
+            </div>
+
+            <div style={{display: 'flex'}}>
+              <div className="square-container">
+                <img src={event.fighter_2_img} className="square-image" alt=""/>
+              </div>
+            </div>
+
           </div>
-          <p className="fightCardTitle" style={{fontSize:'1.5rem'}} > VS. </p>
-          <div className="fightCardTitle"> 
-            <p> {getLastName(event.away_team)} </p>
-            <p className={ getPriceClass(event.away_team_price) }> {event.away_team_price} </p>
-          </div>
-          <p> {event.home_team} vs. {event.away_team} </p>
-          <p className="text-sm text-gray-600">
-            Commence Time: {new Date(event.commence_time).toLocaleString()}
+
+          <p style={{textAlign:'center'}}> {event.title} </p>
+          <p style={{textAlign:'center'}}> {event.location} </p>
+          <p className="text-sm" style={{textAlign:'center', marginTop: '5px'}}>
+            {new Date(event.date).toLocaleString()}
           </p>
-          <button className={getBetBtnClass(canBet)}> Bet Now </button>
+          <button style={{marginBottom:'1rem'}} className={getBetBtnClass(canBet)}> Bet Now </button>
         </div>
       </div>
+    </li>
+  );
+
+  return (
+    <li key={event.id} className="feed-item bg-gray-100 rounded shadow flex flex-col">
+      <img className="rounded" src={event.poster_image_url?event.poster_image_url:''}></img>
     </li>
   );
 }

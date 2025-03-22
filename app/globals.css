@@ -44,12 +44,18 @@ body {
 
 .fightCardTitle {
   font-weight: bold;
-  font-size: 2rem;
   font-family: var(--font-card-header), sans-serif;
   display: flex;
+  font-size: clamp(1rem, -0.875rem + 8.333vw, 3.5rem);
   p {
     margin: 0.25rem;
   }
+}
+
+.cardHeaderTxt {
+  font-weight: bold;
+  font-size: 2rem;
+  font-family: var(--font-card-header), sans-serif;
 }
 
 .feed-item {
@@ -65,4 +71,18 @@ body {
   color: black;
   margin-top: 1rem;
   font-weight: 500;
+}
+
+.square-container {
+  width: 100%;  /* Adjust as needed */
+  aspect-ratio: 1 / 1; /* Ensures square */
+  overflow: hidden;
+}
+
+.square-image {
+  width: clamp(1rem, -0.875rem + 16.333vw, 10rem);
+  height: clamp(1rem, -0.875rem + 16.333vw, 10rem);
+  object-fit: cover;
+  object-position: center; /* Default - can be omitted */
+  border-radius: 50%;
 }

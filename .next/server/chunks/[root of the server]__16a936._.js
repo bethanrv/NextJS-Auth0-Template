@@ -181,8 +181,62 @@ async function dbHasFight(supabase, id) {
     }
     return data && data.length > 0;
 }
+// make search request
+async function googleImageSearch(query) {
+    try {
+        console.log('Searching ' + query);
+        const url = new URL('https://www.googleapis.com/customsearch/v1');
+        const params = {
+            key: process.env.GOOGLE_SEARCH_KEY ? process.env.GOOGLE_SEARCH_KEY : '',
+            cx: 'c3b7eab4226b246e7',
+            q: query
+        };
+        // Add query parameters to URL
+        Object.entries(params).forEach(([key, value])=>{
+            url.searchParams.append(key, value.toString());
+        });
+        const response = await fetch(url, {
+            method: 'GET'
+        });
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error('Error fetching fight schedule:', error);
+        throw error;
+    }
+}
+// get image url from image search result
+async function getAvailableImage(imageRes) {
+    for (const searchItem of imageRes.items){
+        if (searchItem.pagemap.cse_image) {
+            if (!searchItem.pagemap.cse_image[0].src || !searchItem.pagemap.cse_image[0].src.startsWith('http') || !(searchItem.pagemap.cse_image[0].src.endsWith('jpg') || searchItem.pagemap.cse_image[0].src.endsWith('jpeg') || searchItem.pagemap.cse_image[0].src.endsWith('png') || searchItem.pagemap.cse_image[0].src.endsWith('webp'))) continue;
+            return searchItem.pagemap.cse_image[0].src;
+        }
+    }
+    return '';
+}
+// get image for a fighter
+async function getFighterImg(fighter, fight) {
+    try {
+        const fighterNameForQuery = fighter.full_name || fighter.name;
+        if (!fighterNameForQuery) return null;
+        const fighterImageQuery = `${fighterNameForQuery} boxer portriat -boxrec -youtube`;
+        console.log('searching ' + fighterImageQuery);
+        const imageRes = await googleImageSearch(fighterImageQuery);
+        return getAvailableImage(imageRes) || null;
+    } catch (error) {
+        console.error('Image search failed:', error);
+        return null;
+    }
+}
 // add new fight
 async function insertFight(supabase, fight) {
+    // get fighter images before adding
+    const fight_1_img = await getFighterImg(fight.fighters.fighter_1, fight);
+    const fight_2_img = await getFighterImg(fight.fighters.fighter_2, fight);
     const { data, error } = await supabase.from('fights').insert({
         event_id: fight.id,
         title: fight.title,
@@ -197,7 +251,11 @@ async function insertFight(supabase, fight) {
         fighter_2_id: fight.fighters.fighter_2.fighter_id,
         division_name: fight.division.name,
         division_weight_lb: fight.division.weight_lb,
-        poster_image_url: fight.event.poster_image_url
+        poster_image_url: fight.event.poster_image_url,
+        fighter_1_full_name: fight.fighters.fighter_1.full_name ? fight.fighters.fighter_1.full_name : fight.fighters.fighter_1.name,
+        fighter_2_full_name: fight.fighters.fighter_2.full_name ? fight.fighters.fighter_2.full_name : fight.fighters.fighter_2.name,
+        fighter_1_img: fight_1_img,
+        fighter_2_img: fight_2_img
     }).select('*').single();
     if (error) {
         console.error('Insert error:', error);
@@ -205,15 +263,33 @@ async function insertFight(supabase, fight) {
     }
     return data;
 }
+// sleep util
+const sleep = (ms)=>new Promise((resolve)=>setTimeout(resolve, ms));
 // update fights in supbase
 async function updateFights(supabase) {
-    // get fight schedule
-    const fightSchedule = await fetchFightSchedule();
-    // add new fights
-    for (const fight of fightSchedule){
-        if (!await dbHasFight(supabase, fight.id)) {
-            insertFight(supabase, fight);
+    try {
+        const fightSchedule = await fetchFightSchedule();
+        for (const fight of fightSchedule){
+            try {
+                if (!await dbHasFight(supabase, fight.id)) {
+                    await insertFight(supabase, fight);
+                    await sleep(4000); // Rate limit after successful insert
+                }
+            } catch (fightError) {
+                console.error(`Error processing fight ${fight.id}:`, fightError);
+            // Consider adding retry logic here if needed
+            }
         }
+        return {
+            success: true,
+            count: fightSchedule.length
+        };
+    } catch (error) {
+        console.error('Failed to update fights:', error);
+        return {
+            success: false,
+            error
+        };
     }
 }
 // delete from fights (for testing)
@@ -234,6 +310,11 @@ async function GET(request) {
     // start db client
     const supabase = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$utils$2f$supabase$2f$server$2e$ts__$5b$app$2d$route$5d$__$28$ecmascript$29$__["createClient"])();
     // await deleteFights(supabase)
+    // test search
+    // const searchRes = await googleImageSearch("Turner, Boxer, Flyweight")
+    // for(const item of searchRes.items) {
+    //   console.log(item.pagemap.cse_image)
+    // }
     // add new fights
     try {
         await updateFights(supabase) // get fights from the betting api and add any new results
