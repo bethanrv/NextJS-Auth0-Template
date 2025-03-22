@@ -14,10 +14,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var _s = __turbopack_refresh__.signature();
 "use client";
 ;
-function EditForm({ initialName1, initialName2, event }) {
+function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event }) {
     _s();
     const [name1, setName1] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialName1);
     const [name2, setName2] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialName2);
+    const [img1, setImg1] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialImg1);
+    const [img2, setImg2] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(initialImg2);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [success, setSuccess] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -35,7 +37,9 @@ function EditForm({ initialName1, initialName2, event }) {
                 body: JSON.stringify({
                     id: event.id,
                     fighter_1_name: name1,
-                    fighter__name: name2
+                    fighter_2_name: name2,
+                    fighter_1_img: img1,
+                    fighter_2_img: img2
                 })
             });
             if (!response.ok) {
@@ -61,7 +65,7 @@ function EditForm({ initialName1, initialName2, event }) {
                         children: "Name 1"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 93,
+                        lineNumber: 105,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -72,13 +76,13 @@ function EditForm({ initialName1, initialName2, event }) {
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 94,
+                        lineNumber: 106,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 92,
+                lineNumber: 104,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -88,7 +92,7 @@ function EditForm({ initialName1, initialName2, event }) {
                         children: "Name 2"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 103,
+                        lineNumber: 115,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -99,13 +103,81 @@ function EditForm({ initialName1, initialName2, event }) {
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 104,
+                        lineNumber: 116,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 102,
+                lineNumber: 114,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                        src: img1
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 126,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                        className: "block font-medium",
+                        children: "Img 1"
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 127,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        type: "text",
+                        value: img1,
+                        onChange: (e)=>setImg1(e.target.value),
+                        className: "border p-2 rounded w-full",
+                        disabled: loading
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 128,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/admin/EditForm.tsx",
+                lineNumber: 125,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                        src: img2
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 137,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                        className: "block font-medium",
+                        children: "Img 2"
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 138,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        type: "text",
+                        value: img2,
+                        onChange: (e)=>setImg2(e.target.value),
+                        className: "border p-2 rounded w-full",
+                        disabled: loading
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 139,
+                        columnNumber: 9
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/admin/EditForm.tsx",
+                lineNumber: 136,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -115,7 +187,7 @@ function EditForm({ initialName1, initialName2, event }) {
                 children: loading ? "Updating..." : "Submit"
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 112,
+                lineNumber: 148,
                 columnNumber: 7
             }, this),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -123,7 +195,7 @@ function EditForm({ initialName1, initialName2, event }) {
                 children: error
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 119,
+                lineNumber: 155,
                 columnNumber: 17
             }, this),
             success && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -131,17 +203,17 @@ function EditForm({ initialName1, initialName2, event }) {
                 children: "Event updated successfully ✅"
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 121,
+                lineNumber: 157,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/EditForm.tsx",
-        lineNumber: 91,
+        lineNumber: 103,
         columnNumber: 5
     }, this);
 }
-_s(EditForm, "1c7auTTx8SQRwVQ1aMe9N90oEi8=");
+_s(EditForm, "iuIsX9vGovw3AEupjzTG2uZsZqo=");
 _c = EditForm;
 var _c;
 __turbopack_refresh__.register(_c, "EditForm");
@@ -186,7 +258,7 @@ function EventItem({ event }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/EventItem.tsx",
-                                lineNumber: 49,
+                                lineNumber: 53,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -197,13 +269,13 @@ function EventItem({ event }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/admin/EventItem.tsx",
-                                lineNumber: 52,
+                                lineNumber: 56,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/admin/EventItem.tsx",
-                        lineNumber: 48,
+                        lineNumber: 52,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -215,18 +287,18 @@ function EventItem({ event }) {
                             className: "w-5 h-5"
                         }, void 0, false, {
                             fileName: "[project]/app/admin/EventItem.tsx",
-                            lineNumber: 60,
+                            lineNumber: 64,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EventItem.tsx",
-                        lineNumber: 56,
+                        lineNumber: 60,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EventItem.tsx",
-                lineNumber: 47,
+                lineNumber: 51,
                 columnNumber: 7
             }, this),
             isEditing && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -234,21 +306,23 @@ function EventItem({ event }) {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$app$2f$admin$2f$EditForm$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                     event: event,
                     initialName1: event.fighter_1_name,
-                    initialName2: event.fighter_2_name
+                    initialName2: event.fighter_2_name,
+                    initialImg1: event.fighter_1_img,
+                    initialImg2: event.fighter_2_img
                 }, void 0, false, {
                     fileName: "[project]/app/admin/EventItem.tsx",
-                    lineNumber: 66,
+                    lineNumber: 70,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/admin/EventItem.tsx",
-                lineNumber: 65,
+                lineNumber: 69,
                 columnNumber: 9
             }, this)
         ]
     }, event.id, true, {
         fileName: "[project]/app/admin/EventItem.tsx",
-        lineNumber: 46,
+        lineNumber: 50,
         columnNumber: 5
     }, this);
 }

@@ -36,7 +36,11 @@ interface Fight {
   division_name: string | null,
   division_weight_lb: number,
   event_id: string,
-  poster_image_url: string | null
+  poster_image_url: string | null,
+  fighter_1_full_name: string,
+  fighter_2_full_name: string,
+  fighter_1_img: string,
+  fighter_2_img: string,
 }
 
 export default function EventItem({ event }: { event: Fight }) {
@@ -63,7 +67,7 @@ export default function EventItem({ event }: { event: Fight }) {
       {/* Conditionally render the edit form */}
       {isEditing && (
         <div className="mt-2">
-          <EditForm event={event} initialName1={event.fighter_1_name} initialName2={event.fighter_2_name} />
+          <EditForm event={event} initialName1={event.fighter_1_name} initialName2={event.fighter_2_name} initialImg1={event.fighter_1_img} initialImg2={event.fighter_2_img} />
         </div>
       )}
     </li>

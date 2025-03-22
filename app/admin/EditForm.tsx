@@ -5,6 +5,8 @@ import { useState } from "react";
 interface EditFormProps {
   initialName1: string;
   initialName2: string;
+  initialImg1: string;
+  initialImg2: string;
   event: Fight;
 }
 
@@ -40,16 +42,24 @@ interface Fight {
   division_name: string | null,
   division_weight_lb: number,
   event_id: string,
-  poster_image_url: string | null
+  poster_image_url: string | null,
+  fighter_1_full_name: string,
+  fighter_2_full_name: string,
+  fighter_1_img: string,
+  fighter_2_img: string,
 }
 
 export default function EditForm({
   initialName1,
   initialName2,
+  initialImg1,
+  initialImg2,
   event,
 }: EditFormProps) {
   const [name1, setName1] = useState(initialName1);
   const [name2, setName2] = useState(initialName2);
+  const [img1, setImg1] = useState(initialImg1);
+  const [img2, setImg2] = useState(initialImg2);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -69,7 +79,9 @@ export default function EditForm({
         body: JSON.stringify({
           id: event.id,
           fighter_1_name: name1,
-          fighter__name: name2
+          fighter_2_name: name2,
+          fighter_1_img: img1,
+          fighter_2_img: img2,
         }),
       });
 
@@ -109,6 +121,30 @@ export default function EditForm({
           disabled={loading}
         />
       </div>
+
+      <div>
+        <img src={img1} />
+        <label className="block font-medium">Img 1</label>
+        <input
+          type="text"
+          value={img1}
+          onChange={(e) => setImg1(e.target.value)}
+          className="border p-2 rounded w-full"
+          disabled={loading}
+        />
+      </div>
+      <div>
+        <img src={img2} />
+        <label className="block font-medium">Img 2</label>
+        <input
+          type="text"
+          value={img2}
+          onChange={(e) => setImg2(e.target.value)}
+          className="border p-2 rounded w-full"
+          disabled={loading}
+        />
+      </div>
+
       <button
         type="submit"
         disabled={loading}

@@ -36,7 +36,11 @@ interface Fight {
   division_name: string | null,
   division_weight_lb: number,
   event_id: string,
-  poster_image_url: string | null
+  poster_image_url: string | null,
+  fighter_1_full_name: string,
+  fighter_2_full_name: string,
+  fighter_1_img: string,
+  fighter_2_img: string,
 }
 
 // Return past events
