@@ -2,6 +2,57 @@ import { createClient } from '@/utils/supabase/server';
 import { getSession } from '@auth0/nextjs-auth0';
 import { NextResponse } from 'next/server';
 
+export async function GET() {
+  try {
+    const session = await getSession();
+    if (!session?.user) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const supabase = await createClient();
+    
+    // Get user's ID from the users table
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('sid', session.user.sid)
+      .single();
+
+    if (userError || !userData) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Fetch user's bets with fight details
+    const { data: bets, error: betsError } = await supabase
+      .from('bets')
+      .select(`
+        *,
+        fight:fights (
+          fighter_1_name,
+          fighter_2_name,
+          fighter_1_img,
+          fighter_2_img,
+          date,
+          title,
+          status,
+          result_outcome
+        )
+      `)
+      .eq('user_id', userData.id)
+      .order('created_at', { ascending: false });
+
+    if (betsError) {
+      return NextResponse.json({ error: 'Failed to fetch bets' }, { status: 500 });
+    }
+
+    return NextResponse.json({ bets });
+
+  } catch (error) {
+    console.error('Error fetching bets:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const session = await getSession();
