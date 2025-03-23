@@ -183,6 +183,8 @@ async function deleteTest(supabase: any) {
 export async function GET() {
   try {
     const supabase = await createClient();
+    let processedCount = 0;
+    let errorCount = 0;
 
     // Get all completed fights that haven't been processed for payouts
     const { data: completedFights, error: fightsError } = await supabase
@@ -200,8 +202,12 @@ export async function GET() {
       return NextResponse.json({ message: 'No completed fights to process' });
     }
 
+    console.log(`Processing ${completedFights.length} completed fights`);
+
     // Process each completed fight
     for (const fight of completedFights) {
+      console.log(`Processing fight ${fight.id}: ${fight.fighter_1_name} vs ${fight.fighter_2_name}`);
+      
       // Get all bets for this fight that haven't been completed
       const { data: bets, error: betsError } = await supabase
         .from('bets')
@@ -211,62 +217,85 @@ export async function GET() {
 
       if (betsError) {
         console.error(`Error fetching bets for fight ${fight.id}:`, betsError);
+        errorCount++;
         continue;
       }
 
       if (!bets || bets.length === 0) {
+        console.log(`No pending bets found for fight ${fight.id}`);
         continue;
       }
 
+      console.log(`Processing ${bets.length} bets for fight ${fight.id}`);
+
       // Process each bet
       for (const bet of bets) {
-        // Determine if the bet was won
-        const isWinner = bet.selected_fighter === fight.result_outcome;
+        try {
+          // Determine if the bet was won
+          const isWinner = bet.selected_fighter === fight.result_outcome;
+          console.log(`Bet ${bet.id}: User ${bet.user_id} bet on ${bet.selected_fighter} - ${isWinner ? 'WON' : 'LOST'}`);
 
-        // Calculate payout (2x for winners, 0 for losers)
-        const payout = isWinner ? bet.stake * 2 : 0;
+          // Calculate payout (2x for winners, 0 for losers)
+          const payout = isWinner ? bet.stake * 2 : 0;
 
-        // Start a transaction
-        const { data: userData, error: userError } = await supabase
-          .from('users')
-          .select('tokens')
-          .eq('id', bet.user_id)
-          .single();
+          // Start a transaction
+          const { data: userData, error: userError } = await supabase
+            .from('users')
+            .select('tokens')
+            .eq('id', bet.user_id)
+            .single();
 
-        if (userError) {
-          console.error(`Error fetching user ${bet.user_id}:`, userError);
-          continue;
+          if (userError) {
+            console.error(`Error fetching user ${bet.user_id}:`, userError);
+            errorCount++;
+            continue;
+          }
+
+          const currentTokens = userData?.tokens || 0;
+          const newTokenBalance = currentTokens + payout;
+
+          // Update user's token balance
+          const { error: updateError } = await supabase
+            .from('users')
+            .update({ tokens: newTokenBalance })
+            .eq('id', bet.user_id);
+
+          if (updateError) {
+            console.error(`Error updating tokens for user ${bet.user_id}:`, updateError);
+            errorCount++;
+            continue;
+          }
+
+          // Mark bet as completed
+          const { error: betUpdateError } = await supabase
+            .from('bets')
+            .update({ 
+              completed: true,
+              payout: payout,
+              result: isWinner ? 'WIN' : 'LOSS'
+            })
+            .eq('id', bet.id);
+
+          if (betUpdateError) {
+            console.error(`Error marking bet ${bet.id} as completed:`, betUpdateError);
+            errorCount++;
+            continue;
+          }
+
+          console.log(`Successfully processed bet ${bet.id}: User ${bet.user_id} ${isWinner ? 'won' : 'lost'} ${payout} tokens`);
+          processedCount++;
+        } catch (error) {
+          console.error(`Error processing bet ${bet.id}:`, error);
+          errorCount++;
         }
-
-        // Update user's token balance
-        const { error: updateError } = await supabase
-          .from('users')
-          .update({ tokens: (userData?.tokens || 0) + payout })
-          .eq('id', bet.user_id);
-
-        if (updateError) {
-          console.error(`Error updating tokens for user ${bet.user_id}:`, updateError);
-          continue;
-        }
-
-        // Mark bet as completed
-        const { error: betUpdateError } = await supabase
-          .from('bets')
-          .update({ completed: true })
-          .eq('id', bet.id);
-
-        if (betUpdateError) {
-          console.error(`Error marking bet ${bet.id} as completed:`, betUpdateError);
-          continue;
-        }
-
-        console.log(`Processed bet ${bet.id}: ${isWinner ? 'Won' : 'Lost'} ${payout} tokens`);
       }
     }
 
     return NextResponse.json({ 
-      message: 'Successfully processed bet payouts',
-      processedFights: completedFights.length
+      message: 'Bet processing completed',
+      processedBets: processedCount,
+      errors: errorCount,
+      totalFights: completedFights.length
     });
 
   } catch (error) {
