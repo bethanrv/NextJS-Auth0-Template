@@ -15,6 +15,7 @@ interface Comment {
     totalLikes: number;
     userLiked: boolean;
   };
+  parent_comment_id: number | null;
 }
 
 interface CommentSectionProps {
@@ -29,6 +30,8 @@ export default function CommentSection({ fightId, isVisible }: CommentSectionPro
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [replyingTo, setReplyingTo] = useState<number | null>(null);
+  const [replyText, setReplyText] = useState("");
 
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
@@ -122,12 +125,14 @@ export default function CommentSection({ fightId, isVisible }: CommentSectionPro
     }
   };
 
-  const handlePostComment = async (e: React.FormEvent) => {
+  const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim() || !user) return;
 
+    setIsLoading(true);
+    setError(null);
+
     try {
-      setIsLoading(true);
       const response = await fetch('/api/comments', {
         method: 'POST',
         headers: {
@@ -143,7 +148,7 @@ export default function CommentSection({ fightId, isVisible }: CommentSectionPro
       
       const data = await response.json();
       // Add new comment with 0 likes and sort the array
-      const newCommentWithLikes = { ...data.comment, likes: { totalLikes: 0, userLiked: false } };
+      const newCommentWithLikes = { ...data.comment, likes: { totalLikes: 0, userLiked: false }, parent_comment_id: null };
       setComments(prev => [...prev, newCommentWithLikes].sort((a, b) => {
         const likesA = a.likes?.totalLikes || 0;
         const likesB = b.likes?.totalLikes || 0;
@@ -152,6 +157,42 @@ export default function CommentSection({ fightId, isVisible }: CommentSectionPro
       setNewComment('');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to post comment');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSubmitReply = async (parentCommentId: number, e: React.FormEvent) => {
+    e.preventDefault();
+    if (!replyText.trim()) return;
+
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const response = await fetch('/api/comments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fightId,
+          comment: replyText.trim(),
+          parentCommentId,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to post reply');
+      }
+
+      const data = await response.json();
+      setComments(prev => [...prev, { ...data.comment, parent_comment_id: parentCommentId }]);
+      setReplyText('');
+      setReplyingTo(null);
+    } catch (err) {
+      console.error('Error posting reply:', err);
+      setError('Failed to post reply');
     } finally {
       setIsLoading(false);
     }
@@ -216,90 +257,131 @@ export default function CommentSection({ fightId, isVisible }: CommentSectionPro
     }
   };
 
+  const renderComment = (comment: Comment) => {
+    const replies = comments.filter(c => c.parent_comment_id === comment.id);
+    
+    return (
+      <div key={comment.id} className="mb-4">
+        <div className="bg-white rounded-lg p-4 shadow">
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="font-semibold">{comment.user.name}</p>
+              <div className="flex items-center gap-2">
+                <p className="text-gray-600 text-sm">
+                  {formatTimeAgo(comment.created_at)}
+                </p>
+                <button
+                  onClick={() => handleLikeComment(comment.id)}
+                  className="flex items-center gap-1 p-1 hover:bg-gray-100 rounded-full transition-colors"
+                  disabled={!user}
+                  title={user ? "Like comment" : "Login to like"}
+                >
+                  <img 
+                    src="/heart.svg" 
+                    alt="Like" 
+                    className="w-4 h-4"
+                    style={{
+                      filter: comment.likes?.userLiked 
+                        ? 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(97%) contrast(97%)' 
+                        : 'brightness(0) invert(0.7)'
+                    }}
+                  />
+                  <span className="text-sm text-gray-600">
+                    {comment.likes?.totalLikes || 0}
+                  </span>
+                </button>
+              </div>
+            </div>
+            {user && currentUserId !== null && currentUserId === Number(comment.user_id) && (
+              <button
+                onClick={() => handleDeleteComment(comment.id)}
+                className="text-red-500 hover:text-red-700"
+              >
+                Delete
+              </button>
+            )}
+          </div>
+          <p className="mt-2">{comment.comment}</p>
+          <div className="mt-2 flex items-center space-x-2">
+            <button
+              onClick={() => setReplyingTo(comment.id)}
+              className="text-blue-500 hover:text-blue-700 text-sm"
+            >
+              Reply
+            </button>
+          </div>
+        </div>
+
+        {replyingTo === comment.id && (
+          <form onSubmit={(e) => handleSubmitReply(comment.id, e)} className="ml-8 mt-2">
+            <textarea
+              value={replyText}
+              onChange={(e) => setReplyText(e.target.value)}
+              placeholder="Write a reply..."
+              className="w-full p-2 border rounded"
+              rows={2}
+            />
+            <div className="flex justify-end space-x-2 mt-2">
+              <button
+                type="button"
+                onClick={() => setReplyingTo(null)}
+                className="px-3 py-1 text-gray-600 hover:text-gray-800"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                disabled={isLoading || !replyText.trim()}
+                className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+              >
+                {isLoading ? 'Posting...' : 'Post Reply'}
+              </button>
+            </div>
+          </form>
+        )}
+
+        {replies.length > 0 && (
+          <div className="ml-8 mt-2">
+            {replies.map(reply => renderComment(reply))}
+          </div>
+        )}
+      </div>
+    );
+  };
+
   if (!isVisible) return null;
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-4 mb-4">
-      <form onSubmit={handlePostComment} className="mb-4">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-            className="flex-1 p-2 border rounded"
-            disabled={!user}
-          />
+    <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+      <h3 className="text-lg font-semibold mb-4">Comments</h3>
+      
+      <form onSubmit={handleSubmitComment} className="mb-6">
+        <textarea
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="Write a comment..."
+          className="w-full p-2 border rounded"
+          rows={3}
+        />
+        <div className="flex justify-end mt-2">
           <button
             type="submit"
-            disabled={!user || !newComment.trim() || isLoading}
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+            disabled={isLoading || !newComment.trim()}
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
           >
-            Post
+            {isLoading ? 'Posting...' : 'Post Comment'}
           </button>
         </div>
       </form>
 
       {error && (
-        <p className="text-red-500 text-sm mb-4">{error}</p>
+        <p className="text-red-500 mb-4">{error}</p>
       )}
 
       <div className="space-y-4">
-        {isLoading ? (
-          <p className="text-gray-500">Loading comments...</p>
-        ) : comments.length === 0 ? (
-          <p className="text-gray-500">No comments yet. Be the first to comment!</p>
-        ) : (
-          comments.map((comment) => (
-            <div key={comment.id} className="border-b pb-4 last:border-b-0">
-              <div className="flex justify-between items-start">
-                <div>
-                  <p className="font-semibold">{comment.user.name}</p>
-                  <div className="flex items-center gap-2">
-                    <p className="text-gray-600 text-sm">
-                      {formatTimeAgo(comment.created_at)}
-                    </p>
-                    <button
-                      onClick={() => handleLikeComment(comment.id)}
-                      className="flex items-center gap-1 p-1 hover:bg-gray-100 rounded-full transition-colors"
-                      disabled={!user}
-                      title={user ? "Like comment" : "Login to like"}
-                    >
-                      <img 
-                        src="/heart.svg" 
-                        alt="Like" 
-                        className="w-4 h-4"
-                        style={{
-                          filter: comment.likes?.userLiked 
-                            ? 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(97%) contrast(97%)' 
-                            : 'brightness(0) invert(0.7)'
-                        }}
-                      />
-                      <span className="text-sm text-gray-600">
-                        {comment.likes?.totalLikes || 0}
-                      </span>
-                    </button>
-                  </div>
-                </div>
-                {user && currentUserId !== null && currentUserId === Number(comment.user_id) && (
-                  <button
-                    onClick={() => handleDeleteComment(comment.id)}
-                    className="p-1 hover:bg-gray-100 rounded-full transition-colors"
-                    disabled={isLoading}
-                    title="Delete comment"
-                  >
-                    <img 
-                      src="/trash.svg" 
-                      alt="Delete" 
-                      className="w-4 h-4"
-                    />
-                  </button>
-                )}
-              </div>
-              <p className="mt-2">{comment.comment}</p>
-            </div>
-          ))
-        )}
+        {comments
+          .filter(comment => !comment.parent_comment_id) // Only show top-level comments
+          .map(comment => renderComment(comment))}
       </div>
     </div>
   );

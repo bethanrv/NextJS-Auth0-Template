@@ -1,8 +1,10 @@
 {
-  "/feed/page": "app/feed/page.js",
-  "/_not-found/page": "app/_not-found/page.js",
+  "/page": "app/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
   "/api/auth/[auth0]/route": "app/api/auth/[auth0]/route.js",
-  "/api/bets/route": "app/api/bets/route.js",
-  "/api/tokens/route": "app/api/tokens/route.js"
+  "/feed/page": "app/feed/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
+  "/api/users/me/route": "app/api/users/me/route.js",
+  "/api/comments/route": "app/api/comments/route.js",
+  "/api/comments/likes/route": "app/api/comments/likes/route.js"
 }
