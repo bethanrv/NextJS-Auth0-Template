@@ -78,68 +78,155 @@ function getBetBtnClass(canBet : boolean) {
 }
 
 export default function FeedItem({ event, canBet }:FeedItemProps) {
+  const [showBetModal, setShowBetModal] = useState(false);
+  const [selectedFighter, setSelectedFighter] = useState<number | null>(null);
+  const [betAmount, setBetAmount] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
-  console.log(event)
-  console.log(canBet)
+  const handleBetClick = () => {
+    setShowBetModal(true);
+    setSelectedFighter(null);
+    setBetAmount('');
+    setError('');
+  };
 
-
-
+  const handlePlaceBet = () => {
+    if (!selectedFighter) {
+      setError('Please select a fighter');
+      return;
+    }
+    if (!betAmount || isNaN(Number(betAmount)) || Number(betAmount) <= 0) {
+      setError('Please enter a valid bet amount');
+      return;
+    }
+    // Here we would typically make an API call to place the bet
+    console.log(`Placing bet: ${betAmount} tokens on fighter ${selectedFighter}`);
+    setShowBetModal(false);
+  };
 
   return (
-        
-    <li key={event.id} className="feed-item bg-gray-100 rounded shadow flex flex-col"  style={{ 
-      backgroundImage: `url('${event.poster_image_url}')`,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundRepeat: 'no-repeat',
-      borderRadius: '10px',
-      marginBottom: '1.5rem'
-    }}>
-      <div className="flex items-center justify-between" style={{backdropFilter:'blur(5px) brightness(60%) grayscale(50%)', borderRadius:'10px'}}>
-        <div style={{display:'flex', flexDirection:'column', alignItems:'center', width:'100%'}}>
-          
-          <div style={{display: 'flex', justifyContent:'space-evenly', alignItems:'center', width:'100%'}}>
-           
-            <div style={{display: 'flex'}}>
-              <div className="square-container">
-                <img src={event.fighter_1_img} className="square-image" alt=""/>
+    <>
+      <li key={event.id} className="feed-item bg-gray-100 rounded shadow flex flex-col"  style={{ 
+        backgroundImage: `url('${event.poster_image_url}')`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        borderRadius: '10px',
+        marginBottom: '1.5rem'
+      }}>
+        <div className="flex items-center justify-between" style={{backdropFilter:'blur(5px) brightness(60%) grayscale(50%)', borderRadius:'10px'}}>
+          <div style={{display:'flex', flexDirection:'column', alignItems:'center', width:'100%'}}>
+            
+            <div style={{display: 'flex', justifyContent:'space-evenly', alignItems:'center', width:'100%'}}>
+             
+              <div style={{display: 'flex'}}>
+                <div className="square-container">
+                  <img src={event.fighter_1_img} className="square-image" alt=""/>
+                </div>
               </div>
+
+              <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
+                <div className="fightCardTitle" style={{marginTop:'1rem'}}> 
+                  <p> {event.fighter_1_name} </p>
+                </div>
+                <p className="fightCardTitle" style={{fontSize:'1.5rem'}} > VS. </p>
+                <div className="fightCardTitle"> 
+                  <p> {event.fighter_2_name} </p>
+                </div>
+              </div>
+
+              <div style={{display: 'flex'}}>
+                <div className="square-container">
+                  <img src={event.fighter_2_img} className="square-image" alt=""/>
+                </div>
+              </div>
+
             </div>
 
-            <div style={{display:'flex', flexDirection:'column', alignItems:'center'}}>
-              <div className="fightCardTitle" style={{marginTop:'1rem'}}> 
-                <p> {event.fighter_1_name} </p>
-                {/* <p className={ getPriceClass(event.home_team_price) }> {event.home_team_price} </p> */}
-              </div>
-              <p className="fightCardTitle" style={{fontSize:'1.5rem'}} > VS. </p>
-              <div className="fightCardTitle"> 
-                <p> {event.fighter_2_name} </p>
-                {/* <p className={ getPriceClass(event.away_team_price) }> {event.away_team_price} </p> */}
-              </div>
-            </div>
-
-            <div style={{display: 'flex'}}>
-              <div className="square-container">
-                <img src={event.fighter_2_img} className="square-image" alt=""/>
-              </div>
-            </div>
-
+            <p style={{textAlign:'center'}}> {event.title} </p>
+            <p style={{textAlign:'center'}}> {event.location} </p>
+            <p className="text-sm" style={{textAlign:'center', marginTop: '5px'}}>
+              {new Date(event.date).toLocaleString()}
+            </p>
+            <button 
+              style={{marginBottom:'1rem'}} 
+              className={getBetBtnClass(canBet)}
+              onClick={handleBetClick}
+            > 
+              Bet Now 
+            </button>
           </div>
-
-          <p style={{textAlign:'center'}}> {event.title} </p>
-          <p style={{textAlign:'center'}}> {event.location} </p>
-          <p className="text-sm" style={{textAlign:'center', marginTop: '5px'}}>
-            {new Date(event.date).toLocaleString()}
-          </p>
-          <button style={{marginBottom:'1rem'}} className={getBetBtnClass(canBet)}> Bet Now </button>
         </div>
-      </div>
-    </li>
-  );
+      </li>
 
-  return (
-    <li key={event.id} className="feed-item bg-gray-100 rounded shadow flex flex-col">
-      <img className="rounded" src={event.poster_image_url?event.poster_image_url:''}></img>
-    </li>
+      {/* Betting Modal */}
+      {showBetModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4">
+            <h2 className="text-2xl font-bold mb-4">Place Your Bet</h2>
+            
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Select Fighter
+              </label>
+              <div className="flex space-x-4">
+                <button
+                  className={`flex-1 py-2 px-4 rounded ${
+                    selectedFighter === 1 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-200 text-gray-700'
+                  }`}
+                  onClick={() => setSelectedFighter(1)}
+                >
+                  {event.fighter_1_name}
+                </button>
+                <button
+                  className={`flex-1 py-2 px-4 rounded ${
+                    selectedFighter === 2 
+                      ? 'bg-blue-600 text-white' 
+                      : 'bg-gray-200 text-gray-700'
+                  }`}
+                  onClick={() => setSelectedFighter(2)}
+                >
+                  {event.fighter_2_name}
+                </button>
+              </div>
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Bet Amount (tokens)
+              </label>
+              <input
+                type="number"
+                className="w-full p-2 border rounded"
+                value={betAmount}
+                onChange={(e) => setBetAmount(e.target.value)}
+                placeholder="Enter amount"
+              />
+            </div>
+
+            {error && (
+              <p className="text-red-500 text-sm mb-4">{error}</p>
+            )}
+
+            <div className="flex justify-end space-x-4">
+              <button
+                className="px-4 py-2 bg-gray-200 text-gray-700 rounded"
+                onClick={() => setShowBetModal(false)}
+              >
+                Cancel
+              </button>
+              <button
+                className="px-4 py-2 bg-blue-600 text-white rounded"
+                onClick={handlePlaceBet}
+              >
+                Place Bet
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
