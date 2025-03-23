@@ -46,6 +46,13 @@ export default async function Home() {
               My Bets
             </Link>
             <Link
+              href="/leaderboard"
+              className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors flex items-center gap-2"
+            >
+              <img src="/leaderboard.svg" alt="Leaderboard" className="w-5 h-5" />
+              Leaderboard
+            </Link>
+            <Link
               href="/logged-in"
               className="px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
             >

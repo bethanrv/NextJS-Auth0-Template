@@ -8,5 +8,7 @@
   "/api/tokens/route": "app/api/tokens/route.js",
   "/bets/page": "app/bets/page.js",
   "/admin/page": "app/admin/page.js",
-  "/api/protected/updateFight/route": "app/api/protected/updateFight/route.js"
+  "/api/protected/updateFight/route": "app/api/protected/updateFight/route.js",
+  "/leaderboard/page": "app/leaderboard/page.js",
+  "/api/leaderboard/route": "app/api/leaderboard/route.js"
 }
