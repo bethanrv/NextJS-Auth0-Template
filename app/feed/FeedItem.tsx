@@ -203,7 +203,12 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating, use
             <p style={{textAlign:'center'}}> {event.title} </p>
             <p style={{textAlign:'center'}}> {event.location} </p>
             <p className="text-sm" style={{textAlign:'center', marginTop: '5px'}}>
-              {new Date(event.date).toLocaleString()}
+              {new Date(event.date).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric',
+                hour: 'numeric',
+                hour12: true 
+              })}
             </p>
             <div className="mt-4 flex justify-between items-center">
               <button 
