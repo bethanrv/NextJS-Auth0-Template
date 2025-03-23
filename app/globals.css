@@ -80,9 +80,10 @@ body {
 }
 
 .square-image {
-  width: clamp(1rem, -0.875rem + 16.333vw, 10rem);
-  height: clamp(1rem, -0.875rem + 16.333vw, 10rem);
+  width: clamp(5rem, -0.875rem + 16.333vw, 10rem);
+  height: clamp(5rem, -0.875rem + 16.333vw, 10rem);
   object-fit: cover;
   object-position: center; /* Default - can be omitted */
   border-radius: 50%;
+  border: 2px solid #ffffff17;
 }
