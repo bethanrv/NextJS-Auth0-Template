@@ -54,6 +54,7 @@ export default function FeedItemsWrapper({ events, canBet, initialTokenBalance, 
           canBet={canBet}
           onTokenUpdate={onTokenUpdate}
           isUpdating={isUpdating}
+          userTokenBalance={tokenBalance}
         />
       ))}
     </ul>

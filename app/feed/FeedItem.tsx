@@ -33,6 +33,7 @@ interface FeedItemProps {
   canBet: boolean; 
   onTokenUpdate: (newBalance: number) => void;
   isUpdating: boolean;
+  userTokenBalance: number;
 }
 
 interface dbEvent {
@@ -79,27 +80,23 @@ function getBetBtnClass(canBet : boolean) {
   return 'hidden'
 }
 
-export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating }:FeedItemProps) {
+export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating, userTokenBalance }:FeedItemProps) {
   const [showBetModal, setShowBetModal] = useState(false);
   const [selectedFighter, setSelectedFighter] = useState<number | null>(null);
-  const [betAmount, setBetAmount] = useState<string>('');
+  const [betAmount, setBetAmount] = useState<number>(1);
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleBetClick = () => {
     setShowBetModal(true);
     setSelectedFighter(null);
-    setBetAmount('');
+    setBetAmount(1);
     setError('');
   };
 
   const handlePlaceBet = async () => {
     if (!selectedFighter) {
       setError('Please select a fighter');
-      return;
-    }
-    if (!betAmount || isNaN(Number(betAmount)) || Number(betAmount) <= 0) {
-      setError('Please enter a valid bet amount');
       return;
     }
 
@@ -115,7 +112,7 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating }:Fe
         body: JSON.stringify({
           fightId: event.id,
           selectedFighter: selectedFighter === 1 ? event.fighter_1_name : event.fighter_2_name,
-          stake: Number(betAmount),
+          stake: betAmount,
         }),
       });
 
@@ -136,6 +133,19 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating }:Fe
     } finally {
       setIsSubmitting(false);
     }
+  };
+
+  const handleSliderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    setBetAmount(value);
+  };
+
+  const handleIncrement = () => {
+    setBetAmount(prev => Math.min(prev + 1, userTokenBalance));
+  };
+
+  const handleDecrement = () => {
+    setBetAmount(prev => Math.max(prev - 1, 1));
   };
 
   return (
@@ -234,14 +244,34 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating }:Fe
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Bet Amount (tokens)
               </label>
-              <input
-                type="number"
-                className="w-full p-2 border rounded"
-                value={betAmount}
-                onChange={(e) => setBetAmount(e.target.value)}
-                placeholder="Enter amount"
-                disabled={isSubmitting || isUpdating}
-              />
+              <div className="flex items-center space-x-4">
+                <button
+                  className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                  onClick={handleDecrement}
+                  disabled={betAmount <= 1 || isSubmitting || isUpdating}
+                >
+                  -
+                </button>
+                <input
+                  type="range"
+                  min="1"
+                  max={userTokenBalance}
+                  value={betAmount}
+                  onChange={handleSliderChange}
+                  className="flex-1"
+                  disabled={isSubmitting || isUpdating}
+                />
+                <button
+                  className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 disabled:opacity-50"
+                  onClick={handleIncrement}
+                  disabled={betAmount >= userTokenBalance || isSubmitting || isUpdating}
+                >
+                  +
+                </button>
+              </div>
+              <div className="text-center mt-2 text-sm text-gray-600">
+                {betAmount} tokens
+              </div>
             </div>
 
             {error && (
@@ -258,12 +288,12 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating }:Fe
               </button>
               <button
                 className={`px-4 py-2 bg-blue-600 text-white rounded ${
-                  (isSubmitting || isUpdating) ? 'opacity-50 cursor-not-allowed' : ''
+                  (isSubmitting || isUpdating || userTokenBalance === 0) ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
                 onClick={handlePlaceBet}
-                disabled={isSubmitting || isUpdating}
+                disabled={isSubmitting || isUpdating || userTokenBalance === 0}
               >
-                {isSubmitting ? 'Placing Bet...' : 'Place Bet'}
+                {isSubmitting ? 'Placing Bet...' : userTokenBalance === 0 ? 'No Tokens Available' : 'Place Bet'}
               </button>
             </div>
           </div>
