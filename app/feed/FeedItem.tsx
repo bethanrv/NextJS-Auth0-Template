@@ -31,6 +31,8 @@ interface Fight {
 interface FeedItemProps {
   event: Fight; 
   canBet: boolean; 
+  onTokenUpdate: (newBalance: number) => void;
+  isUpdating: boolean;
 }
 
 interface dbEvent {
@@ -77,11 +79,12 @@ function getBetBtnClass(canBet : boolean) {
   return 'hidden'
 }
 
-export default function FeedItem({ event, canBet }:FeedItemProps) {
+export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating }:FeedItemProps) {
   const [showBetModal, setShowBetModal] = useState(false);
   const [selectedFighter, setSelectedFighter] = useState<number | null>(null);
   const [betAmount, setBetAmount] = useState<string>('');
   const [error, setError] = useState<string>('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleBetClick = () => {
     setShowBetModal(true);
@@ -90,7 +93,7 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
     setError('');
   };
 
-  const handlePlaceBet = () => {
+  const handlePlaceBet = async () => {
     if (!selectedFighter) {
       setError('Please select a fighter');
       return;
@@ -99,9 +102,40 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
       setError('Please enter a valid bet amount');
       return;
     }
-    // Here we would typically make an API call to place the bet
-    console.log(`Placing bet: ${betAmount} tokens on fighter ${selectedFighter}`);
-    setShowBetModal(false);
+
+    setIsSubmitting(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/bets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fightId: event.id,
+          selectedFighter: selectedFighter === 1 ? event.fighter_1_name : event.fighter_2_name,
+          stake: Number(betAmount),
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to place bet');
+      }
+
+      // Update token balance in parent component
+      if (onTokenUpdate) {
+        onTokenUpdate(data.newTokenBalance);
+      }
+
+      setShowBetModal(false);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to place bet');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -152,6 +186,7 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
               style={{marginBottom:'1rem'}} 
               className={getBetBtnClass(canBet)}
               onClick={handleBetClick}
+              disabled={isUpdating}
             > 
               Bet Now 
             </button>
@@ -177,6 +212,7 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
                       : 'bg-gray-200 text-gray-700'
                   }`}
                   onClick={() => setSelectedFighter(1)}
+                  disabled={isSubmitting || isUpdating}
                 >
                   {event.fighter_1_name}
                 </button>
@@ -187,6 +223,7 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
                       : 'bg-gray-200 text-gray-700'
                   }`}
                   onClick={() => setSelectedFighter(2)}
+                  disabled={isSubmitting || isUpdating}
                 >
                   {event.fighter_2_name}
                 </button>
@@ -203,6 +240,7 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
                 value={betAmount}
                 onChange={(e) => setBetAmount(e.target.value)}
                 placeholder="Enter amount"
+                disabled={isSubmitting || isUpdating}
               />
             </div>
 
@@ -214,14 +252,18 @@ export default function FeedItem({ event, canBet }:FeedItemProps) {
               <button
                 className="px-4 py-2 bg-gray-200 text-gray-700 rounded"
                 onClick={() => setShowBetModal(false)}
+                disabled={isSubmitting || isUpdating}
               >
                 Cancel
               </button>
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded"
+                className={`px-4 py-2 bg-blue-600 text-white rounded ${
+                  (isSubmitting || isUpdating) ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
                 onClick={handlePlaceBet}
+                disabled={isSubmitting || isUpdating}
               >
-                Place Bet
+                {isSubmitting ? 'Placing Bet...' : 'Place Bet'}
               </button>
             </div>
           </div>

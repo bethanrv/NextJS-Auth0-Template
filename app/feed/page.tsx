@@ -1,7 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/utils/supabase/server";
-import FeedItem from "./FeedItem"; // Adjust the import path as necessary
-import ProfileImage from "@/components/ProfileImage";
+import FeedContent from "./FeedContent";
 import { getSession } from "@auth0/nextjs-auth0";
 
 interface Fight {
@@ -24,7 +23,11 @@ interface Fight {
   division_name: string | null,
   division_weight_lb: number,
   event_id: string,
-  poster_image_url: string | null
+  poster_image_url: string | null,
+  fighter_1_full_name: string,
+  fighter_2_full_name: string,
+  fighter_1_img: string,
+  fighter_2_img: string,
 }
 
 interface dbEvent {
@@ -170,7 +173,6 @@ function getTokenCount(dbUserInfo: DbUser[]) {
 }
 
 async function FeedPage() {
-
   // Create Supabase client and query events
   const supabase = await createClient();
   let { data: events, error } = await supabase.from("fights").select();
@@ -192,73 +194,18 @@ async function FeedPage() {
 
     console.log('db user info')
     console.log(dbUserInfo)
-
-    // remove user info test
-    // const { error } = await supabase
-    // .from('users')
-    // .delete()
-    // .eq('sid', 'oUWNDhRKILBXNA2ZRvNZ97QY_2YDJt1S');
   }
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto">
-        <div className="bg-black shadow p-6">
-        
-          {session ? (
-            <div style={{justifyContent: 'end', alignItems:'center'}} className="flex">
-                <div style={{justifyContent: 'end', alignItems:'center', border: '1px solid black', borderRadius: '5px', marginRight: '0.5rem', padding: '0.25rem'}} className="flex">
-                    <p className="text-white" style={{fontSize:'14px'}}> { dbUserInfo[0]?.tokens ?? 100 } </p>
-                    <img src="/coin.svg" alt="Edit" style={{height:'1.5rem'}} />
-                </div>
-                <ProfileImage />
-            </div>
-          ) : (
-            <h2 className="text-xl font-semibold text-white mb-4">
-            Please login to bet credits
-            </h2>
-          )}
-
-          <p className="text-gray-600 mb-4 text-white">
-            Welcome to PnB
-          </p>
-
-          {currentEvents.length > 0 ? (
-          <div className="border-t border-gray-200 pt-4">
-            <h2 className="text-xl font-semibold text-white mb-3">
-              Happening Now
-            </h2>
-              <ul className="space-y-2">
-                {currentEvents.map((event) => (
-                  <FeedItem key={event.id} event={event} canBet={false} />
-                ))}
-              </ul>
-          </div>):( <></> )}
-
-          {upcomingEvents.length > 0 ? (
-          <div className="border-t border-gray-200 pt-4">
-            <h2 className="text-xl font-semibold text-white mb-3">
-            Upcoming Fights
-            </h2>
-              <ul className="space-y-2">
-                {upcomingEvents.map((event) => (
-                  <FeedItem key={event.id} event={event} canBet={true} />
-                ))}
-              </ul>
-          </div>):( <></> )}
-
-          {pastEvents.length > 0 ? (
-          <div className="border-t border-gray-200 pt-4">
-            <h2 className="text-xl font-semibold text-white mb-3">
-            Past Events
-            </h2>
-              <ul className="space-y-2">
-                {pastEvents.map((event) => (
-                  <FeedItem key={event.id} event={event} canBet={false}/>
-                ))}
-              </ul>
-          </div>):( <></> )}
-        </div>
+        <FeedContent 
+          currentEvents={currentEvents}
+          upcomingEvents={upcomingEvents}
+          pastEvents={pastEvents}
+          initialTokenBalance={dbUserInfo[0]?.tokens ?? 100}
+          isLoggedIn={!!session?.user}
+        />
       </div>
     </div>
   )

@@ -37,19 +37,20 @@ function getBetBtnClass(canBet) {
     }
     return 'hidden';
 }
-function FeedItem({ event, canBet }) {
+function FeedItem({ event, canBet, onTokenUpdate }) {
     _s();
     const [showBetModal, setShowBetModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [selectedFighter, setSelectedFighter] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [betAmount, setBetAmount] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [isSubmitting, setIsSubmitting] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const handleBetClick = ()=>{
         setShowBetModal(true);
         setSelectedFighter(null);
         setBetAmount('');
         setError('');
     };
-    const handlePlaceBet = ()=>{
+    const handlePlaceBet = async ()=>{
         if (!selectedFighter) {
             setError('Please select a fighter');
             return;
@@ -58,9 +59,34 @@ function FeedItem({ event, canBet }) {
             setError('Please enter a valid bet amount');
             return;
         }
-        // Here we would typically make an API call to place the bet
-        console.log(`Placing bet: ${betAmount} tokens on fighter ${selectedFighter}`);
-        setShowBetModal(false);
+        setIsSubmitting(true);
+        setError('');
+        try {
+            const response = await fetch('/api/bets', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    fightId: event.id,
+                    selectedFighter: selectedFighter === 1 ? event.fighter_1_name : event.fighter_2_name,
+                    stake: Number(betAmount)
+                })
+            });
+            const data = await response.json();
+            if (!response.ok) {
+                throw new Error(data.error || 'Failed to place bet');
+            }
+            // Update token balance in parent component
+            if (onTokenUpdate) {
+                onTokenUpdate(data.newTokenBalance);
+            }
+            setShowBetModal(false);
+        } catch (err) {
+            setError(err instanceof Error ? err.message : 'Failed to place bet');
+        } finally{
+            setIsSubmitting(false);
+        }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
         children: [
@@ -108,17 +134,17 @@ function FeedItem({ event, canBet }) {
                                                 alt: ""
                                             }, void 0, false, {
                                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                                lineNumber: 124,
+                                                lineNumber: 157,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/feed/FeedItem.tsx",
-                                            lineNumber: 123,
+                                            lineNumber: 156,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/feed/FeedItem.tsx",
-                                        lineNumber: 122,
+                                        lineNumber: 155,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -141,12 +167,12 @@ function FeedItem({ event, canBet }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                                    lineNumber: 130,
+                                                    lineNumber: 163,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                                lineNumber: 129,
+                                                lineNumber: 162,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -157,7 +183,7 @@ function FeedItem({ event, canBet }) {
                                                 children: " VS. "
                                             }, void 0, false, {
                                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                                lineNumber: 132,
+                                                lineNumber: 165,
                                                 columnNumber: 17
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -170,18 +196,18 @@ function FeedItem({ event, canBet }) {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                                    lineNumber: 134,
+                                                    lineNumber: 167,
                                                     columnNumber: 19
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                                lineNumber: 133,
+                                                lineNumber: 166,
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/app/feed/FeedItem.tsx",
-                                        lineNumber: 128,
+                                        lineNumber: 161,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -196,23 +222,23 @@ function FeedItem({ event, canBet }) {
                                                 alt: ""
                                             }, void 0, false, {
                                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                                lineNumber: 140,
+                                                lineNumber: 173,
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/app/feed/FeedItem.tsx",
-                                            lineNumber: 139,
+                                            lineNumber: 172,
                                             columnNumber: 17
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/app/feed/FeedItem.tsx",
-                                        lineNumber: 138,
+                                        lineNumber: 171,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 120,
+                                lineNumber: 153,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -226,7 +252,7 @@ function FeedItem({ event, canBet }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 146,
+                                lineNumber: 179,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -240,7 +266,7 @@ function FeedItem({ event, canBet }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 147,
+                                lineNumber: 180,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -252,7 +278,7 @@ function FeedItem({ event, canBet }) {
                                 children: new Date(event.date).toLocaleString()
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 148,
+                                lineNumber: 181,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -264,23 +290,23 @@ function FeedItem({ event, canBet }) {
                                 children: "Bet Now"
                             }, void 0, false, {
                                 fileName: "[project]/app/feed/FeedItem.tsx",
-                                lineNumber: 151,
+                                lineNumber: 184,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/app/feed/FeedItem.tsx",
-                        lineNumber: 118,
+                        lineNumber: 151,
                         columnNumber: 11
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/app/feed/FeedItem.tsx",
-                    lineNumber: 117,
+                    lineNumber: 150,
                     columnNumber: 9
                 }, this)
             }, event.id, false, {
                 fileName: "[project]/app/feed/FeedItem.tsx",
-                lineNumber: 109,
+                lineNumber: 142,
                 columnNumber: 7
             }, this),
             showBetModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -293,7 +319,7 @@ function FeedItem({ event, canBet }) {
                             children: "Place Your Bet"
                         }, void 0, false, {
                             fileName: "[project]/app/feed/FeedItem.tsx",
-                            lineNumber: 166,
+                            lineNumber: 199,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -304,7 +330,7 @@ function FeedItem({ event, canBet }) {
                                     children: "Select Fighter"
                                 }, void 0, false, {
                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                    lineNumber: 169,
+                                    lineNumber: 202,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -313,31 +339,33 @@ function FeedItem({ event, canBet }) {
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             className: `flex-1 py-2 px-4 rounded ${selectedFighter === 1 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`,
                                             onClick: ()=>setSelectedFighter(1),
+                                            disabled: isSubmitting,
                                             children: event.fighter_1_name
                                         }, void 0, false, {
                                             fileName: "[project]/app/feed/FeedItem.tsx",
-                                            lineNumber: 173,
+                                            lineNumber: 206,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             className: `flex-1 py-2 px-4 rounded ${selectedFighter === 2 ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700'}`,
                                             onClick: ()=>setSelectedFighter(2),
+                                            disabled: isSubmitting,
                                             children: event.fighter_2_name
                                         }, void 0, false, {
                                             fileName: "[project]/app/feed/FeedItem.tsx",
-                                            lineNumber: 183,
+                                            lineNumber: 217,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                    lineNumber: 172,
+                                    lineNumber: 205,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/feed/FeedItem.tsx",
-                            lineNumber: 168,
+                            lineNumber: 201,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -348,7 +376,7 @@ function FeedItem({ event, canBet }) {
                                     children: "Bet Amount (tokens)"
                                 }, void 0, false, {
                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                    lineNumber: 197,
+                                    lineNumber: 232,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -356,16 +384,17 @@ function FeedItem({ event, canBet }) {
                                     className: "w-full p-2 border rounded",
                                     value: betAmount,
                                     onChange: (e)=>setBetAmount(e.target.value),
-                                    placeholder: "Enter amount"
+                                    placeholder: "Enter amount",
+                                    disabled: isSubmitting
                                 }, void 0, false, {
                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                    lineNumber: 200,
+                                    lineNumber: 235,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/feed/FeedItem.tsx",
-                            lineNumber: 196,
+                            lineNumber: 231,
                             columnNumber: 13
                         }, this),
                         error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -373,7 +402,7 @@ function FeedItem({ event, canBet }) {
                             children: error
                         }, void 0, false, {
                             fileName: "[project]/app/feed/FeedItem.tsx",
-                            lineNumber: 210,
+                            lineNumber: 246,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -382,42 +411,44 @@ function FeedItem({ event, canBet }) {
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                     className: "px-4 py-2 bg-gray-200 text-gray-700 rounded",
                                     onClick: ()=>setShowBetModal(false),
+                                    disabled: isSubmitting,
                                     children: "Cancel"
                                 }, void 0, false, {
                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                    lineNumber: 214,
+                                    lineNumber: 250,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    className: "px-4 py-2 bg-blue-600 text-white rounded",
+                                    className: `px-4 py-2 bg-blue-600 text-white rounded ${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`,
                                     onClick: handlePlaceBet,
-                                    children: "Place Bet"
+                                    disabled: isSubmitting,
+                                    children: isSubmitting ? 'Placing Bet...' : 'Place Bet'
                                 }, void 0, false, {
                                     fileName: "[project]/app/feed/FeedItem.tsx",
-                                    lineNumber: 220,
+                                    lineNumber: 257,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/app/feed/FeedItem.tsx",
-                            lineNumber: 213,
+                            lineNumber: 249,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/app/feed/FeedItem.tsx",
-                    lineNumber: 165,
+                    lineNumber: 198,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/app/feed/FeedItem.tsx",
-                lineNumber: 164,
+                lineNumber: 197,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true);
 }
-_s(FeedItem, "XXJwsmsNy6dVD6xZ72N6qR6Iygw=");
+_s(FeedItem, "BetQvG6wk2WK5KvKhgRW+udfQTs=");
 _c = FeedItem;
 var _c;
 __turbopack_refresh__.register(_c, "FeedItem");
