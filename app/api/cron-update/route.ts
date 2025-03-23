@@ -180,41 +180,98 @@ async function deleteTest(supabase: any) {
   .eq('id', 23)
 }
 
-export async function GET(request: Request) {
-
-  // Authorization check first
-  const authHeader = request.headers.get('Authorization');
-  if (!authHeader || authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-    return new NextResponse('Unauthorized', {
-      status: 401,
-      headers: { 'WWW-Authenticate': 'Bearer' }
-    });
-  }
-
-  // start db client
-  const supabase = await createClient();
-
-  // test fights
-  // await testFights(supabase)
-
-  // add test fight
-  // await addTestFight(supabase)
-
-  // delete test fight
-  // await deleteTest(supabase)
-
-  // update fights with final results
+export async function GET() {
   try {
-    await updateFights(supabase) // get fights from the betting api and add any new results
-    return NextResponse.json({
-      success: true
+    const supabase = await createClient();
+
+    // Get all completed fights that haven't been processed for payouts
+    const { data: completedFights, error: fightsError } = await supabase
+      .from('fights')
+      .select('*')
+      .eq('status', 'FINISHED')
+      .eq('result_outcome', 'COMPLETED');
+
+    if (fightsError) {
+      console.error('Error fetching completed fights:', fightsError);
+      return NextResponse.json({ error: 'Failed to fetch completed fights' }, { status: 500 });
+    }
+
+    if (!completedFights || completedFights.length === 0) {
+      return NextResponse.json({ message: 'No completed fights to process' });
+    }
+
+    // Process each completed fight
+    for (const fight of completedFights) {
+      // Get all bets for this fight that haven't been completed
+      const { data: bets, error: betsError } = await supabase
+        .from('bets')
+        .select('*')
+        .eq('fight_id', fight.id)
+        .eq('completed', false);
+
+      if (betsError) {
+        console.error(`Error fetching bets for fight ${fight.id}:`, betsError);
+        continue;
+      }
+
+      if (!bets || bets.length === 0) {
+        continue;
+      }
+
+      // Process each bet
+      for (const bet of bets) {
+        // Determine if the bet was won
+        const isWinner = bet.selected_fighter === fight.result_outcome;
+
+        // Calculate payout (2x for winners, 0 for losers)
+        const payout = isWinner ? bet.stake * 2 : 0;
+
+        // Start a transaction
+        const { data: userData, error: userError } = await supabase
+          .from('users')
+          .select('tokens')
+          .eq('id', bet.user_id)
+          .single();
+
+        if (userError) {
+          console.error(`Error fetching user ${bet.user_id}:`, userError);
+          continue;
+        }
+
+        // Update user's token balance
+        const { error: updateError } = await supabase
+          .from('users')
+          .update({ tokens: (userData?.tokens || 0) + payout })
+          .eq('id', bet.user_id);
+
+        if (updateError) {
+          console.error(`Error updating tokens for user ${bet.user_id}:`, updateError);
+          continue;
+        }
+
+        // Mark bet as completed
+        const { error: betUpdateError } = await supabase
+          .from('bets')
+          .update({ completed: true })
+          .eq('id', bet.id);
+
+        if (betUpdateError) {
+          console.error(`Error marking bet ${bet.id} as completed:`, betUpdateError);
+          continue;
+        }
+
+        console.log(`Processed bet ${bet.id}: ${isWinner ? 'Won' : 'Lost'} ${payout} tokens`);
+      }
+    }
+
+    return NextResponse.json({ 
+      message: 'Successfully processed bet payouts',
+      processedFights: completedFights.length
     });
-  } catch (err: any) {
-    console.error('Cron job failed:', err.message);
-    return NextResponse.json(
-      { success: false, error: err.message },
-      { status: 500 }
-    );
+
+  } catch (error) {
+    console.error('Error in cron-update:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
   }
 }
 
