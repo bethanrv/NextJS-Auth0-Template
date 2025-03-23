@@ -67,7 +67,14 @@ export default function EventItem({ event }: { event: Fight }) {
       {/* Conditionally render the edit form */}
       {isEditing && (
         <div className="mt-2">
-          <EditForm event={event} initialName1={event.fighter_1_name} initialName2={event.fighter_2_name} initialImg1={event.fighter_1_img} initialImg2={event.fighter_2_img} />
+          <EditForm 
+            event={event} 
+            initialName1={event.fighter_1_name} 
+            initialName2={event.fighter_2_name} 
+            initialImg1={event.fighter_1_img} 
+            initialImg2={event.fighter_2_img}
+            initialPosterUrl={event.poster_image_url}
+          />
         </div>
       )}
     </li>

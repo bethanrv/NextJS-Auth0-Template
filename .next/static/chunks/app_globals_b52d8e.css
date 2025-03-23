@@ -399,6 +399,10 @@ img, video {
   height: 1.25rem;
 }
 
+.max-h-\[200px\] {
+  max-height: 200px;
+}
+
 .min-h-screen {
   min-height: 100vh;
 }
@@ -423,6 +427,10 @@ img, video {
   width: 100%;
 }
 
+.w-auto {
+  width: auto;
+}
+
 .max-w-4xl {
   max-width: 56rem;
 }
@@ -433,6 +441,14 @@ img, video {
 
 .max-w-md {
   max-width: 28rem;
+}
+
+.max-w-xs {
+  max-width: 20rem;
+}
+
+.max-w-full {
+  max-width: 100%;
 }
 
 .flex-1 {
@@ -503,6 +519,10 @@ img, video {
   --tw-space-x-reverse: 0;
   margin-right: calc(1rem * var(--tw-space-x-reverse));
   margin-left: calc(1rem * calc(1 - var(--tw-space-x-reverse)));
+}
+
+.overflow-hidden {
+  overflow: hidden;
 }
 
 .rounded {
@@ -632,6 +652,10 @@ img, video {
 
 .to-indigo-50 {
   --tw-gradient-to: #eef2ff var(--tw-gradient-to-position);
+}
+
+.object-contain {
+  object-fit: contain;
 }
 
 .p-12 {

@@ -13,11 +13,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 "use client";
 ;
 ;
-function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event }) {
+function EditForm({ initialName1, initialName2, initialImg1, initialImg2, initialPosterUrl, event }) {
     const [name1, setName1] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialName1);
     const [name2, setName2] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialName2);
     const [img1, setImg1] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialImg1);
     const [img2, setImg2] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialImg2);
+    const [posterUrl, setPosterUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(initialPosterUrl || "");
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])("");
     const [success, setSuccess] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
@@ -37,7 +38,8 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                     fighter_1_name: name1,
                     fighter_2_name: name2,
                     fighter_1_img: img1,
-                    fighter_2_img: img2
+                    fighter_2_img: img2,
+                    poster_image_url: posterUrl || null
                 })
             });
             if (!response.ok) {
@@ -63,7 +65,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         children: "Name 1"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 105,
+                        lineNumber: 109,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -74,13 +76,13 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 106,
+                        lineNumber: 110,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 104,
+                lineNumber: 108,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -90,7 +92,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         children: "Name 2"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 115,
+                        lineNumber: 119,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -101,13 +103,13 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 116,
+                        lineNumber: 120,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 114,
+                lineNumber: 118,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -116,7 +118,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         src: img1
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 126,
+                        lineNumber: 130,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -124,7 +126,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         children: "Img 1"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 127,
+                        lineNumber: 131,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -135,13 +137,13 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 128,
+                        lineNumber: 132,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 125,
+                lineNumber: 129,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -150,7 +152,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         src: img2
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 137,
+                        lineNumber: 141,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -158,7 +160,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         children: "Img 2"
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 138,
+                        lineNumber: 142,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -169,13 +171,57 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                         disabled: loading
                     }, void 0, false, {
                         fileName: "[project]/app/admin/EditForm.tsx",
-                        lineNumber: 139,
+                        lineNumber: 143,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 136,
+                lineNumber: 140,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                        className: "block font-medium",
+                        children: "Poster Image URL"
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 153,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                        type: "text",
+                        value: posterUrl,
+                        onChange: (e)=>setPosterUrl(e.target.value),
+                        className: "border p-2 rounded w-full",
+                        disabled: loading,
+                        placeholder: "Enter poster image URL"
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 154,
+                        columnNumber: 9
+                    }, this),
+                    posterUrl && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "mt-2 max-w-full overflow-hidden rounded-lg border border-gray-200 bg-white p-2",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                            src: posterUrl,
+                            alt: "Poster preview",
+                            className: "max-h-[200px] w-auto mx-auto object-contain"
+                        }, void 0, false, {
+                            fileName: "[project]/app/admin/EditForm.tsx",
+                            lineNumber: 164,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/app/admin/EditForm.tsx",
+                        lineNumber: 163,
+                        columnNumber: 11
+                    }, this)
+                ]
+            }, void 0, true, {
+                fileName: "[project]/app/admin/EditForm.tsx",
+                lineNumber: 152,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -185,7 +231,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                 children: loading ? "Updating..." : "Submit"
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 148,
+                lineNumber: 173,
                 columnNumber: 7
             }, this),
             error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -193,7 +239,7 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                 children: error
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 155,
+                lineNumber: 180,
                 columnNumber: 17
             }, this),
             success && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -201,13 +247,13 @@ function EditForm({ initialName1, initialName2, initialImg1, initialImg2, event 
                 children: "Event updated successfully ✅"
             }, void 0, false, {
                 fileName: "[project]/app/admin/EditForm.tsx",
-                lineNumber: 157,
+                lineNumber: 182,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/app/admin/EditForm.tsx",
-        lineNumber: 103,
+        lineNumber: 107,
         columnNumber: 5
     }, this);
 }
@@ -297,7 +343,8 @@ function EventItem({ event }) {
                     initialName1: event.fighter_1_name,
                     initialName2: event.fighter_2_name,
                     initialImg1: event.fighter_1_img,
-                    initialImg2: event.fighter_2_img
+                    initialImg2: event.fighter_2_img,
+                    initialPosterUrl: event.poster_image_url
                 }, void 0, false, {
                     fileName: "[project]/app/admin/EventItem.tsx",
                     lineNumber: 70,

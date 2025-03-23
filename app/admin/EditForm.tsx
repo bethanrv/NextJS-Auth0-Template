@@ -7,6 +7,7 @@ interface EditFormProps {
   initialName2: string;
   initialImg1: string;
   initialImg2: string;
+  initialPosterUrl: string | null;
   event: Fight;
 }
 
@@ -54,12 +55,14 @@ export default function EditForm({
   initialName2,
   initialImg1,
   initialImg2,
+  initialPosterUrl,
   event,
 }: EditFormProps) {
   const [name1, setName1] = useState(initialName1);
   const [name2, setName2] = useState(initialName2);
   const [img1, setImg1] = useState(initialImg1);
   const [img2, setImg2] = useState(initialImg2);
+  const [posterUrl, setPosterUrl] = useState(initialPosterUrl || "");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -82,6 +85,7 @@ export default function EditForm({
           fighter_2_name: name2,
           fighter_1_img: img1,
           fighter_2_img: img2,
+          poster_image_url: posterUrl || null,
         }),
       });
 
@@ -143,6 +147,27 @@ export default function EditForm({
           className="border p-2 rounded w-full"
           disabled={loading}
         />
+      </div>
+
+      <div>
+        <label className="block font-medium">Poster Image URL</label>
+        <input
+          type="text"
+          value={posterUrl}
+          onChange={(e) => setPosterUrl(e.target.value)}
+          className="border p-2 rounded w-full"
+          disabled={loading}
+          placeholder="Enter poster image URL"
+        />
+        {posterUrl && (
+          <div className="mt-2 max-w-full overflow-hidden rounded-lg border border-gray-200 bg-white p-2">
+            <img 
+              src={posterUrl} 
+              alt="Poster preview" 
+              className="max-h-[200px] w-auto mx-auto object-contain"
+            />
+          </div>
+        )}
       </div>
 
       <button

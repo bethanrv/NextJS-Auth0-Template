@@ -11,7 +11,7 @@ export async function POST(request: Request) {
 
   try {
     // Parse the incoming JSON request
-    const { id, fighter_1_name, fighter_2_name, fighter_1_img, fighter_2_img } = await request.json();
+    const { id, fighter_1_name, fighter_2_name, fighter_1_img, fighter_2_img, poster_image_url } = await request.json();
 
     // Create a Supabase client instance
     const supabase =  await createClient();
@@ -22,7 +22,8 @@ export async function POST(request: Request) {
         fighter_1_name : fighter_1_name,
         fighter_2_name : fighter_2_name,
         fighter_1_img : fighter_1_img,
-        fighter_2_img : fighter_2_img
+        fighter_2_img : fighter_2_img,
+        poster_image_url : poster_image_url
       })
       .eq("id", id)
       .select(); // Returns the updated record(s)
