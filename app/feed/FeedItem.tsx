@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import CommentSection from './CommentSection';
 
 interface Fight {
   id : number
@@ -26,6 +27,16 @@ interface Fight {
   fighter_2_full_name: string,
   fighter_1_img: string,
   fighter_2_img: string,
+}
+
+interface Comment {
+  id: number;
+  created_at: string;
+  comment: string;
+  user: {
+    name: string;
+    nickname: string;
+  };
 }
 
 interface FeedItemProps {
@@ -86,6 +97,7 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating, use
   const [betAmount, setBetAmount] = useState<number>(1);
   const [error, setError] = useState<string>('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showComments, setShowComments] = useState(false);
 
   const handleBetClick = () => {
     setShowBetModal(true);
@@ -150,13 +162,14 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating, use
 
   return (
     <>
-      <li key={event.id} className="feed-item bg-gray-100 rounded shadow flex flex-col"  style={{ 
+      <li key={event.id} className="feed-item bg-gray-100 rounded shadow flex flex-col relative" style={{ 
         backgroundImage: `url('${event.poster_image_url}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         borderRadius: '10px',
-        marginBottom: '1.5rem'
+        marginTop: '1.5rem',
+        position: 'relative'
       }}>
         <div className="flex items-center justify-between" style={{backdropFilter:'blur(5px) brightness(60%) grayscale(50%)', borderRadius:'10px'}}>
           <div style={{display:'flex', flexDirection:'column', alignItems:'center', width:'100%'}}>
@@ -192,17 +205,37 @@ export default function FeedItem({ event, canBet, onTokenUpdate, isUpdating, use
             <p className="text-sm" style={{textAlign:'center', marginTop: '5px'}}>
               {new Date(event.date).toLocaleString()}
             </p>
-            <button 
-              style={{marginBottom:'1rem'}} 
-              className={getBetBtnClass(canBet)}
-              onClick={handleBetClick}
-              disabled={isUpdating}
-            > 
-              Bet Now 
-            </button>
+            <div className="mt-4 flex justify-between items-center">
+              <button 
+                style={{marginBottom:'1rem'}} 
+                className={getBetBtnClass(canBet)}
+                onClick={handleBetClick}
+                disabled={isUpdating}
+              > 
+                Bet Now 
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Comments Toggle Button */}
+        <button
+          className="absolute bottom-0 right-0 p-2 rounded-full transition-all z-10"
+          onClick={() => setShowComments(!showComments)}
+        >
+          <img 
+            src="/comment.svg" 
+            alt="Comments" 
+            className="w-5 h-5"
+            style={{filter: showComments ? 'brightness(0) invert(1)' : 'brightness(0) invert(0.7)'}}
+          />
+        </button>
       </li>
+
+      <CommentSection 
+        fightId={event.id}
+        isVisible={showComments}
+      />
 
       {/* Betting Modal */}
       {showBetModal && (
