@@ -166,3 +166,6 @@ async function AdminPage() {
 }
 
 export default AdminPage;
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
