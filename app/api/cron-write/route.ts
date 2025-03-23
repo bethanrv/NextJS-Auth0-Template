@@ -68,6 +68,10 @@ async function fetchFightSchedule() {
       url.searchParams.append(key, value.toString());
     });
 
+    if (!process.env.BOXING_API_KEY) {
+      throw new Error('BOXING_API_KEY is not defined');
+    }
+
     const response = await fetch(url, {
       method: 'GET',
       headers: {

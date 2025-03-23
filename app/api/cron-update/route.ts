@@ -70,6 +70,10 @@ async function getFight(event_id : number) {
   try {
     const url = new URL('https://boxing-data-api.p.rapidapi.com/v1/fights/' + event_id);
 
+    if (!process.env.BOXING_API_KEY) {
+      throw new Error('BOXING_API_KEY is not defined');
+    }
+
     const response = await fetch(url, {
       method: 'GET',
       headers: {
