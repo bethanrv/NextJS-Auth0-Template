@@ -39,6 +39,7 @@ export async function GET() {
         )
       `)
       .eq('user_id', userData.id)
+      .order('stake', { ascending: false })
       .order('created_at', { ascending: false });
 
     if (betsError) {
