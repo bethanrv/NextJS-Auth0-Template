@@ -13,5 +13,6 @@
   "/api/leaderboard/route": "app/api/leaderboard/route.js",
   "/api/comments/route": "app/api/comments/route.js",
   "/api/users/me/route": "app/api/users/me/route.js",
-  "/api/comments/likes/route": "app/api/comments/likes/route.js"
+  "/api/comments/likes/route": "app/api/comments/likes/route.js",
+  "/api/protected/route": "app/api/protected/route.js"
 }

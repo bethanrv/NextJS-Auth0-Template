@@ -1,9 +1,9 @@
 {
   "node": {
-    "00fa48169683651625007b8f8a251f0c4b308578e6": {
+    "005e6b59fb01c99ad9662d87becf8a980e3088e6c2": {
       "workers": {
         "app/page": {
-          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
           "async": false
         }
       },
@@ -14,7 +14,40 @@
     "002720c4ca9fd3c4503936f3196d2d3a7b93ff846c": {
       "workers": {
         "app/page": {
-          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      }
+    },
+    "003ae6c5a82c3607305b60cda85422513808bbf7bb": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      }
+    },
+    "0075db9928ca48174a37ceccba481a63c49aa282a7": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
+          "async": false
+        }
+      },
+      "layer": {
+        "app/page": "rsc"
+      }
+    },
+    "00fa48169683651625007b8f8a251f0c4b308578e6": {
+      "workers": {
+        "app/page": {
+          "moduleId": "[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)",
           "async": false
         }
       },

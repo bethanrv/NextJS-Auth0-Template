@@ -12,7 +12,9 @@ runtime.loadChunk("server/chunks/ssr/node_modules_jose_dist_node_cjs_f8a533._.js
 runtime.loadChunk("server/chunks/ssr/node_modules_@auth0_nextjs-auth0_dist_e14a14._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_joi_5c9510._.js");
 runtime.loadChunk("server/chunks/ssr/node_modules_openid-client_1f67dc._.js");
-runtime.loadChunk("server/chunks/ssr/node_modules_31aa45._.js");
-runtime.loadChunk("server/chunks/ssr/[root of the server]__01deb6._.js");
-runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
+runtime.loadChunk("server/chunks/ssr/node_modules_axios_lib_56feb8._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_mime-db_03ce87._.js");
+runtime.loadChunk("server/chunks/ssr/node_modules_7ee09b._.js");
+runtime.loadChunk("server/chunks/ssr/[root of the server]__76038b._.js");
+runtime.getOrInstantiateRuntimeModule("[project]/.next-internal/server/app/page/actions.js { ACTIONS_MODULE0 => \"[project]/actions/auth.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE1 => \"[project]/actions/getUsersRoles.ts [app-rsc] (ecmascript)\", ACTIONS_MODULE2 => \"[project]/actions/isUserAdmin.tsx [app-rsc] (ecmascript)\", ACTIONS_MODULE3 => \"[project]/actions/createAccessToken.ts [app-rsc] (ecmascript)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH);
 module.exports = runtime.getOrInstantiateRuntimeModule("[project]/node_modules/next/dist/esm/build/templates/app-page.js?page=/page { METADATA_0 => \"[project]/app/favicon.ico.mjs { IMAGE => \\\"[project]/app/favicon.ico [app-rsc] (static)\\\" } [app-rsc] (structured image object, ecmascript, Next.js server component)\", MODULE_1 => \"[project]/app/layout.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_2 => \"[project]/app/loading.tsx [app-rsc] (ecmascript, Next.js server component)\", MODULE_3 => \"[project]/node_modules/next/dist/client/components/not-found-error.js [app-rsc] (ecmascript, Next.js server component)\", MODULE_4 => \"[project]/app/page.tsx [app-rsc] (ecmascript, Next.js server component)\" } [app-rsc] (ecmascript)", CHUNK_PUBLIC_PATH).exports;
