@@ -1,18 +1,8 @@
 {
-  "/page": "app/page.js",
-  "/api/auth/[auth0]/route": "app/api/auth/[auth0]/route.js",
   "/feed/page": "app/feed/page.js",
   "/_not-found/page": "app/_not-found/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
+  "/api/auth/[auth0]/route": "app/api/auth/[auth0]/route.js",
   "/api/bets/route": "app/api/bets/route.js",
-  "/api/tokens/route": "app/api/tokens/route.js",
-  "/bets/page": "app/bets/page.js",
-  "/admin/page": "app/admin/page.js",
-  "/api/protected/updateFight/route": "app/api/protected/updateFight/route.js",
-  "/leaderboard/page": "app/leaderboard/page.js",
-  "/api/leaderboard/route": "app/api/leaderboard/route.js",
-  "/api/comments/route": "app/api/comments/route.js",
-  "/api/users/me/route": "app/api/users/me/route.js",
-  "/api/comments/likes/route": "app/api/comments/likes/route.js",
-  "/api/protected/route": "app/api/protected/route.js"
+  "/api/tokens/route": "app/api/tokens/route.js"
 }

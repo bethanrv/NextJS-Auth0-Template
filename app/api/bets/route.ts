@@ -15,7 +15,7 @@ export async function GET() {
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('id')
-      .eq('sid', session.user.sid)
+      .eq('sub', session.user.sub)
       .single();
 
     if (userError || !userData) {
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
     const { data: existingUser, error: userCheckError } = await supabase
       .from('users')
       .select('*')
-      .eq('sid', session.user.sid)
+      .eq('sub', session.user.sub)
       .single();
 
     if (userCheckError && userCheckError.code !== 'PGRST116') { // PGRST116 is "not found"
@@ -84,7 +84,7 @@ export async function POST(request: Request) {
     let userData;
     if (!existingUser) {
       console.log('Creating new user with data:', {
-        sid: session.user.sid,
+        sub: session.user.sub,
         name: session.user.name,
         nickname: session.user.nickname,
         tokens: 100
@@ -94,7 +94,7 @@ export async function POST(request: Request) {
       const { data: newUser, error: createError } = await supabase
         .from('users')
         .insert({
-          sid: session.user.sid,
+          sub: session.user.sub,
           name: session.user.name,
           nickname: session.user.nickname,
           tokens: 100

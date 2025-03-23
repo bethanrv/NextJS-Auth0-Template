@@ -1,5 +1,4 @@
 "use client";
-import { useState, useEffect } from "react";
 import FeedItem from "./FeedItem";
 
 interface Fight {
@@ -38,13 +37,6 @@ interface FeedItemsWrapperProps {
 }
 
 export default function FeedItemsWrapper({ events, canBet, initialTokenBalance, onTokenUpdate, isUpdating }: FeedItemsWrapperProps) {
-  const [tokenBalance, setTokenBalance] = useState(initialTokenBalance);
-
-  // Update token balance when initialTokenBalance changes
-  useEffect(() => {
-    setTokenBalance(initialTokenBalance);
-  }, [initialTokenBalance]);
-
   return (
     <ul className="space-y-2">
       {events.map((event) => (
@@ -54,7 +46,7 @@ export default function FeedItemsWrapper({ events, canBet, initialTokenBalance, 
           canBet={canBet}
           onTokenUpdate={onTokenUpdate}
           isUpdating={isUpdating}
-          userTokenBalance={tokenBalance}
+          userTokenBalance={initialTokenBalance}
         />
       ))}
     </ul>

@@ -47,10 +47,12 @@ export default function FeedContent({
 }: FeedContentProps) {
   const [tokenBalance, setTokenBalance] = useState(initialTokenBalance);
   const [isUpdating, setIsUpdating] = useState(false);
+  const [currentTokenBalance, setCurrentTokenBalance] = useState(initialTokenBalance);
 
   // Update token balance when initialTokenBalance changes
   useEffect(() => {
     setTokenBalance(initialTokenBalance);
+    setCurrentTokenBalance(initialTokenBalance);
   }, [initialTokenBalance]);
 
   const handleTokenUpdate = async (newBalance: number) => {
@@ -58,6 +60,10 @@ export default function FeedContent({
     
     setIsUpdating(true);
     try {
+      // Update local state immediately for better UX
+      setTokenBalance(newBalance);
+      setCurrentTokenBalance(newBalance);
+
       const response = await fetch('/api/tokens', {
         method: 'PUT',
         headers: {
@@ -69,11 +75,15 @@ export default function FeedContent({
       const data = await response.json();
 
       if (!response.ok) {
+        // If the update fails, revert the local state
+        setTokenBalance(initialTokenBalance);
+        setCurrentTokenBalance(initialTokenBalance);
         throw new Error(data.error || 'Failed to update tokens');
       }
 
       // Update local state with the new balance from the server
       setTokenBalance(data.newBalance);
+      setCurrentTokenBalance(data.newBalance);
     } catch (error) {
       console.error('Error updating tokens:', error);
       // Optionally show an error message to the user
@@ -108,7 +118,7 @@ export default function FeedContent({
           <FeedItemsWrapper 
             events={currentEvents}
             canBet={false}
-            initialTokenBalance={tokenBalance}
+            initialTokenBalance={currentTokenBalance}
             onTokenUpdate={handleTokenUpdate}
             isUpdating={isUpdating}
           />
@@ -123,7 +133,7 @@ export default function FeedContent({
           <FeedItemsWrapper 
             events={upcomingEvents}
             canBet={true}
-            initialTokenBalance={tokenBalance}
+            initialTokenBalance={currentTokenBalance}
             onTokenUpdate={handleTokenUpdate}
             isUpdating={isUpdating}
           />
@@ -138,7 +148,7 @@ export default function FeedContent({
           <FeedItemsWrapper 
             events={pastEvents}
             canBet={false}
-            initialTokenBalance={tokenBalance}
+            initialTokenBalance={currentTokenBalance}
             onTokenUpdate={handleTokenUpdate}
             isUpdating={isUpdating}
           />

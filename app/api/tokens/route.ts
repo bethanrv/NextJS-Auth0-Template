@@ -16,13 +16,26 @@ export async function PUT(request: Request) {
       return NextResponse.json({ error: 'Invalid token balance' }, { status: 400 });
     }
 
-    const { error } = await supabase
+    // First get the user's ID using their sub
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('sub', session.user.sub)
+      .single();
+
+    if (userError || !userData) {
+      console.error('Error fetching user:', userError);
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    // Update the user's tokens using their ID
+    const { error: updateError } = await supabase
       .from('users')
       .update({ tokens: newBalance })
-      .eq('sid', session.user.sid);
+      .eq('id', userData.id);
 
-    if (error) {
-      console.error('Error updating tokens:', error);
+    if (updateError) {
+      console.error('Error updating tokens:', updateError);
       return NextResponse.json({ error: 'Failed to update tokens' }, { status: 500 });
     }
 

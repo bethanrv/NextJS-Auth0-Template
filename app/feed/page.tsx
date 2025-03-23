@@ -46,18 +46,16 @@ interface dbEvent {
 
 interface Auth0User {
   sub: string;
-  sid: string;
   name: string;
   nickname: string;
   picture: string;
   email: string;
   email_verified: boolean;
-  updated_at: string;
 }
 
 interface DbUser {
-  id: number;
-  sid: string;
+  id: string;
+  sub: string;
   name: string;
   nickname: string;
   picture: string;
@@ -114,7 +112,7 @@ async function insertUser(session: { user: Auth0User }, supabase: any): Promise<
   const { data, error } = await supabase
     .from('users')
     .insert({
-      sid: session.user.sid,
+      sub: session.user.sub,
       name: session.user.name,
       nickname: session.user.nickname,
       picture: session.user.picture,
@@ -140,29 +138,45 @@ async function insertUser(session: { user: Auth0User }, supabase: any): Promise<
 }
 
 async function getDBUserInfo(session: { user: Auth0User }, supabase: any): Promise<DbUser> {
+  console.log('Getting DB user info for sub:', session.user.sub);
+  
   const { data, error } = await supabase
     .from('users')
     .select('*')
-    .eq('sid', session.user.sid)
+    .eq('sub', session.user.sub)
     .single();
 
   if (error) {
     console.error('Error getting user db info:', error);
+    console.error('Error details:', {
+      code: error.code,
+      message: error.message,
+      details: error.details,
+      hint: error.hint
+    });
     throw error;
   }
 
+  if (!data) {
+    console.log('No user found for sub:', session.user.sub);
+    throw new Error('User not found');
+  }
+
+  console.log('Found user data:', data);
   return data;
 }
 
 async function getDatabaseUser(session: { user: Auth0User }, supabase: any): Promise<DbUser> {
   try {
+    console.log('Attempting to get existing user for sub:', session.user.sub);
     // Try to get existing user
     const existingUser = await getDBUserInfo(session, supabase);
     return existingUser;
   } catch (error: any) {
+    console.log('Error in getDatabaseUser:', error);
     // If user doesn't exist, create them
     if (error?.code === 'PGRST116') { // Not found error
-      console.log('Adding new user...');
+      console.log('User not found, creating new user for sub:', session.user.sub);
       return await insertUser(session, supabase);
     }
     throw error;

@@ -17,7 +17,7 @@ export async function GET() {
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('id')
-      .eq('sid', session.user.sid)
+      .eq('sub', session.user.sub)
       .single();
 
     if (userError) {

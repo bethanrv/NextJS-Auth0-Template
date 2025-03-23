@@ -20,10 +20,16 @@ export async function POST(request: Request) {
     const { data: userData, error: userError } = await supabase
       .from('users')
       .select('id')
-      .eq('sid', session.user.sid)
+      .eq('sub', session.user.sub)
       .single();
 
-    if (userError || !userData) {
+    if (userError) {
+      console.error('Error fetching user:', userError);
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    if (!userData) {
+      console.log('No user data found');
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
@@ -104,7 +110,7 @@ export async function GET(request: Request) {
       const { data: userData, error: userError } = await supabase
         .from('users')
         .select('id')
-        .eq('sid', session.user.sid)
+        .eq('sub', session.user.sub)
         .single();
 
       if (!userError && userData) {
