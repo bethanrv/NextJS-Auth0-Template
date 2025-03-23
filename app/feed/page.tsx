@@ -44,24 +44,28 @@ interface dbEvent {
   last_updated : string | null;
 }
 
-interface User {
-  email: string;
-  email_verified: boolean;
-  given_name: string,
+interface Auth0User {
+  sub: string;
+  sid: string;
   name: string;
   nickname: string;
   picture: string;
-  sid: string;
-  sub: string;
+  email: string;
+  email_verified: boolean;
   updated_at: string;
 }
 
 interface DbUser {
-  id: number | null;
-  name: string | null;
-  nickname: string | null;
-  sid: string  | null;
-  tokens: number | null;
+  id: number;
+  sid: string;
+  name: string;
+  nickname: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
+  tokens: number;
+  created_at: string;
+  updated_at: string;
 }
 
 // Return past events
@@ -102,10 +106,10 @@ function filterUpcomingEvents(events: Fight[]):Fight[] {
 }
 
 // insert new user
-async function insertUser(session : any, supabase : any) {
-
-  if (!session?.user)
-    throw new Error("Error on insertUser, session: " + session)
+async function insertUser(session: { user: Auth0User }, supabase: any): Promise<DbUser> {
+  if (!session?.user) {
+    throw new Error("No user data in session");
+  }
 
   const { data, error } = await supabase
     .from('users')
@@ -113,59 +117,56 @@ async function insertUser(session : any, supabase : any) {
       sid: session.user.sid,
       name: session.user.name,
       nickname: session.user.nickname,
-      tokens: 100
+      picture: session.user.picture,
+      email: session.user.email,
+      email_verified: session.user.email_verified,
+      tokens: 100,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     })
     .select('*')
     .single();
+
   if (error) {
+    if (error.code === '23505') { // Unique violation
+      // User already exists, fetch their data
+      return await getDBUserInfo(session, supabase);
+    }
     console.error('Insert error:', error);
     throw error;
   }
 
-  console.log('insert res =========')
-  console.log(data)
   return data;
 }
 
-async function isUserInDB(session: any, supabase: any) {
+async function getDBUserInfo(session: { user: Auth0User }, supabase: any): Promise<DbUser> {
+  const { data, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('sid', session.user.sid)
+    .single();
+
+  if (error) {
+    console.error('Error getting user db info:', error);
+    throw error;
+  }
+
+  return data;
+}
+
+async function getDatabaseUser(session: { user: Auth0User }, supabase: any): Promise<DbUser> {
   try {
-    const { count, error } = await supabase
-      .from('users')
-      .select('*', { count: 'exact', head: true })
-      .eq('sid', session.user.sid);
-
-    if (error) throw error;
-    return (count || 0) > 0;
-  } catch (error) {
-    console.error('Error checking user existence:', error);
-    return false;
+    // Try to get existing user
+    const existingUser = await getDBUserInfo(session, supabase);
+    return existingUser;
+  } catch (error: any) {
+    // If user doesn't exist, create them
+    if (error?.code === 'PGRST116') { // Not found error
+      console.log('Adding new user...');
+      return await insertUser(session, supabase);
+    }
+    throw error;
   }
-}
-
-async function getDBUserInfo(session: any, supabase: any) {
-  try{
-    const {data, error} = await supabase.from('users').select('*').eq('sid', session.user.sid);
-    if (error) throw error;
-    return data
-  }catch (error) {
-    console.error('Error getting user  db info:', error);
-    return false;
-  }
-}
-  
-// get user info from supabase
-async function getDatabaseUser(session : any, supabase : any) {
-
-  let userInfo
-
-  // user exists? No -> add user
-  const userInDB = await isUserInDB(session, supabase)
-  if(!userInDB) {
-    console.log('Adding new user...')
-   return await insertUser(session, supabase)
-  }
-  // else get user info
-  return await getDBUserInfo(session, supabase)
 }
 
 function getTokenCount(dbUserInfo: DbUser[]) {
@@ -186,14 +187,17 @@ async function FeedPage() {
 
   // get auth0 session
   const session = await getSession();
-  let dbUserInfo = []
+  let dbUserInfo: DbUser | null = null;
 
   if (session?.user) { // get user from db
     console.log('session ============')
-    dbUserInfo = await getDatabaseUser(session, supabase)
-
-    console.log('db user info')
-    console.log(dbUserInfo)
+    try {
+      dbUserInfo = await getDatabaseUser(session as { user: Auth0User }, supabase);
+      console.log('db user info')
+      console.log(dbUserInfo)
+    } catch (error) {
+      console.error('Error getting user info:', error);
+    }
   }
 
   return (
@@ -203,7 +207,7 @@ async function FeedPage() {
           currentEvents={currentEvents}
           upcomingEvents={upcomingEvents}
           pastEvents={pastEvents}
-          initialTokenBalance={dbUserInfo[0]?.tokens ?? 100}
+          initialTokenBalance={dbUserInfo?.tokens ?? 100}
           isLoggedIn={!!session?.user}
         />
       </div>

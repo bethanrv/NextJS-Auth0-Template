@@ -68,15 +68,56 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
-    // Get user's current token balance
-    const { data: userData, error: userError } = await supabase
+    // First, ensure the user exists in the database
+    const { data: existingUser, error: userCheckError } = await supabase
       .from('users')
-      .select('id, tokens')
+      .select('*')
       .eq('sid', session.user.sid)
       .single();
 
-    if (userError || !userData) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    if (userCheckError && userCheckError.code !== 'PGRST116') { // PGRST116 is "not found"
+      console.error('Error checking user:', userCheckError);
+      return NextResponse.json({ error: 'Failed to check user status' }, { status: 500 });
+    }
+
+    let userData;
+    if (!existingUser) {
+      console.log('Creating new user with data:', {
+        sid: session.user.sid,
+        name: session.user.name,
+        nickname: session.user.nickname,
+        tokens: 100
+      });
+
+      // Create the user if they don't exist
+      const { data: newUser, error: createError } = await supabase
+        .from('users')
+        .insert({
+          sid: session.user.sid,
+          name: session.user.name,
+          nickname: session.user.nickname,
+          tokens: 100
+        })
+        .select()
+        .single();
+
+      if (createError) {
+        console.error('Detailed error creating user:', {
+          code: createError.code,
+          message: createError.message,
+          details: createError.details,
+          hint: createError.hint
+        });
+        return NextResponse.json({ 
+          error: 'Failed to create user',
+          details: createError.message 
+        }, { status: 500 });
+      }
+      userData = newUser;
+      console.log('Successfully created new user:', userData);
+    } else {
+      userData = existingUser;
+      console.log('Using existing user:', userData);
     }
 
     // Check if user has enough tokens
